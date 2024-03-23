@@ -1,0 +1,31 @@
+{
+  "name": "full-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JSDNG/fullstack.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "duc quynh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JSDNG/fullstack/issues"
+  },
+  "homepage": "https://github.com/JSDNG/fullstack#readme",
+  "dependencies": {
+    "dotenv": "16.0.3",
+    "ejs": "3.1.8",
+    "express": "4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.20"
+  }
+}
