@@ -13,5 +13,5 @@ configViewEngine(app);
 // khai bao route
 app.use("/", webRoutes);
 app.listen(port, hostname, () => {
-  console.log(`Example app listening on port ${port}`);
+    console.log(`Example app listening on port ${port}`);
 });

@@ -1,14 +1,19 @@
 const getHomePage = (req, res) => {
-  //process data
-  //call model
-  res.send("Hello World! & nodemon");
+    //process data
+    //call model
+    res.send("Hello World! & nodemon");
 };
 
 const getInfo = (req, res) => {
-  res.render("sample.ejs");
+    res.render("sample.ejs");
 };
 
 module.exports = {
-  getHomePage,
-  getInfo,
+    getHomePage,
+    getInfo,
 };
+
+// module.exports = {
+//     getHomePage,
+//     getInfo,
+//   };
