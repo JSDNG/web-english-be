@@ -19,10 +19,10 @@ app.use("/", webRoutes);
 
 // test connection
 
-// simple query
-connection.query("SELECT * FROM user", function (err, results, fields) {
-    console.log(">>>>", results);
-});
+// // simple query
+// connection.query("SELECT * FROM user", function (err, results, fields) {
+//     console.log(">>>>", results);
+// });
 
 app.listen(port, hostname, () => {
     console.log(`Example app listening on port ${port}`);

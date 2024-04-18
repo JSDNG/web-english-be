@@ -7,7 +7,7 @@
     </head>
     <body>
         <div class="topnav">
-            <a href="#home">Home</a>
+            <a class="active" href="/">Home</a>
             <a href="#news">News</a>
             <a href="#contact">Contact</a>
             <a href="#about">About</a>
@@ -15,7 +15,7 @@
         <div class="form-add-new">
             <form action="/create-account" method="post">
                 <fieldset>
-                    <legend>Form</legend>
+                    <legend>create-account</legend>
 
                     <div class="input-group">
                         <label>Email</label>
@@ -30,6 +30,33 @@
                     </div>
                 </fieldset>
             </form>
+            <label>List account</label>
+            <div class="table-container"><%= JSON.stringify(listAccount) %></div>
+            <div class="update-account">
+                <form action="/update-account" method="post">
+                    <fieldset>
+                        <legend>update-account</legend>
+                        <div class="input-group">
+                            <label>id</label>
+                            <input type="text" name="id" />
+                        </div>
+                        <div class="input-group">
+                            <label>Email</label>
+                            <input type="text" name="email" />
+                        </div>
+                        <div class="input-group">
+                            <label>Password</label>
+                            <input type="password" name="password" />
+                        </div>
+                        <div>
+                            <button>Save</button>
+                        </div>
+                    </fieldset>
+                </form>
+                <form action="/delete-account" method="post">
+                    <button>delete id 5</button>
+                </form>
+            </div>
         </div>
     </body>
 </html>
