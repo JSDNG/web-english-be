@@ -11,7 +11,7 @@ const getAccountById = async (id) => {
     return account;
 };
 
-const createAccount = async (email, password) => {
+const createNewAccount = async (email, password) => {
     let [results, fields] = await connection.query(
         `INSERT INTO
     account (email, password)
@@ -19,12 +19,12 @@ const createAccount = async (email, password) => {
         [email, password]
     );
 };
-const updateAccountById = async (password, id) => {
+const updateAccountById = async (email, password, id) => {
     let [results, fields] = await connection.query(
         `UPDATE account
-        SET password = ?
+        SET email =?, password = ?
         WHERE id = ?`,
-        [password, id]
+        [email, password, id]
     );
 };
 
@@ -34,7 +34,7 @@ const deleteAccountById = async (id) => {
 module.exports = {
     getAllAccount,
     getAccountById,
-    createAccount,
+    createNewAccount,
     updateAccountById,
     deleteAccountById,
 };
