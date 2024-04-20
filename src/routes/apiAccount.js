@@ -1,7 +1,6 @@
 const express = require("express");
 const {
     getAllAccounts,
-    getInfo,
     createAccount,
     getAccount,
     updateAccount,
@@ -10,14 +9,12 @@ const {
 const router = express.Router();
 
 const initAPIRoutes = (app) => {
-    // router.get("/", getHomePage);
-    router.get("/account-info/:id", getAccount);
-    router.get("/info", getInfo);
+    router.get("/account/info/:id", getAccount);
 
-    router.post("/create-account", createAccount);
-    router.get("/all", getAllAccounts);
-    router.put("/update-account", updateAccount);
-    router.delete("/delete-account", deleteAccount);
+    router.post("/account", createAccount);
+    router.get("/account/all", getAllAccounts);
+    router.put("/account/change-password", updateAccount);
+    router.delete("/account/:id", deleteAccount);
 
     return app.use("/api/", router);
 };
