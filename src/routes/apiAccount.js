@@ -5,7 +5,7 @@ const {
     getAccount,
     updateAccount,
     deleteAccount,
-} = require("../controllers/apiController");
+} = require("../controllers/accountController");
 const router = express.Router();
 
 const initAPIRoutes = (app) => {

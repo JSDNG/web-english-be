@@ -1,13 +1,12 @@
 module.exports = (sequelize, Sequelize) => {
-    const Account = sequelize.define("account", {
-        email: {
+    const Group = sequelize.define("group", {
+        name: {
             type: Sequelize.STRING,
-            unique: true,
         },
-        password: {
+        description: {
             type: Sequelize.STRING,
         },
     });
 
-    return Account;
+    return Group;
 };
