@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Account = sequelize.define("account", {
+    const Account = sequelize.define("Account", {
         email: {
             type: Sequelize.STRING,
             unique: true,
@@ -8,6 +8,8 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
         },
     });
-
+    Account.associate = function (models) {
+        Account.belongsTo(models.Role, { foreignKey: "role_id" });
+    };
     return Account;
 };

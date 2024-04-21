@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const GroupRole = sequelize.define("groupRole", {
+    const GroupRole = sequelize.define("GroupRole", {
         groupId: {
             type: Sequelize.INTEGER,
         },
@@ -7,6 +7,5 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
         },
     });
-
     return GroupRole;
 };

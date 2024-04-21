@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const FolderDetail = sequelize.define("folderDetail", {
+    const FolderDetail = sequelize.define("FolderDetail", {
         folderId: {
             type: Sequelize.INTEGER,
         },

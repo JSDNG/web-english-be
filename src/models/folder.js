@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Folder = sequelize.define("folder", {
+    const Folder = sequelize.define("Folder", {
         folderName: {
             type: Sequelize.STRING,
         },

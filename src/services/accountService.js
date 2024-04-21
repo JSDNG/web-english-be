@@ -7,7 +7,7 @@ const hashPass = (password) => {
 };
 const getAllAccount = async () => {
     let lists = [];
-    lists = await db.Account.findAll();
+    lists = await db.account.findAll();
     return lists;
 };
 

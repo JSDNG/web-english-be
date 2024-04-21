@@ -1,5 +1,6 @@
+const Group = require("./group");
 module.exports = (sequelize, Sequelize) => {
-    const Role = sequelize.define("role", {
+    const Role = sequelize.define("Role", {
         url: {
             type: Sequelize.STRING,
         },
@@ -7,6 +8,8 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
         },
     });
-
+    Role.associate = function (models) {
+        Role.belongsTo(models.Group, { foreignKey: "role_id" });
+    };
     return Role;
 };
