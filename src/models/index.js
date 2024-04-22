@@ -92,7 +92,7 @@ db.sequelize = sequelize;
 // db.User.hasMany(db.StudySet);
 // db.StudySet.belongsTo(db.User);
 
-// //One-to-many relation between StudySet and User
+// //One-to-many relation between Card and User
 // db.StudySet.hasMany(db.Card);
 // db.Card.belongsTo(db.StudySet);
 

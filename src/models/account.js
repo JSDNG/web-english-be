@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize) => {
         },
     });
     Account.associate = function (models) {
-        Account.belongsTo(models.Role, { foreignKey: "role_id" });
+        Account.hasOne(models.User, { foreignKey: "accountId" });
     };
     return Account;
 };

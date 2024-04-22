@@ -1,5 +1,11 @@
 module.exports = (sequelize, Sequelize) => {
     const GroupRole = sequelize.define("GroupRole", {
+        id: {
+            allowNull: false,
+            autoIncrement: true,
+            primaryKey: true,
+            type: Sequelize.INTEGER,
+        },
         groupId: {
             type: Sequelize.INTEGER,
         },
@@ -7,5 +13,6 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
         },
     });
+
     return GroupRole;
 };

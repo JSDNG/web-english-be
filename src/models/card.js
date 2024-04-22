@@ -10,6 +10,8 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
         },
     });
-
+    Card.associate = function (models) {
+        Card.belongsTo(models.StudySet, { foreignKey: "studySetId" });
+    };
     return Card;
 };

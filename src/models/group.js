@@ -10,7 +10,8 @@ module.exports = (sequelize, Sequelize) => {
         },
     });
     Group.associate = function (models) {
-        Group.belongsTo(models.Role, { foreignKey: "role_id" });
+        Group.belongsToMany(models.Role, { through: models.GroupRole, foreignKey: "groupId" });
+        Group.hasMany(models.User, { foreignKey: "groupId" });
     };
     return Group;
 };
