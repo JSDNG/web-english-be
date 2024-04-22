@@ -13,11 +13,27 @@ const app = express(); // app express
 const port = process.env.PORT;
 const hostname = process.env.HOST_NAME;
 const db = require("./models");
-const initAPIRoutes = require("./routes/accountRouter");
+
 //config req.body
 app.use(express.json()); // Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
 
+// Add headers before the router are defined
+app.use((req, res, next) => {
+    // Website you wish to allow to connect
+    res.setHeader("Access-Control-Allow-Origin", process.env.REACT_URL);
+
+    // Request methods you wish to allow
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+
+    // Request headers you wish to allow
+    res.setHeader("Access-Control-Allow-Headers", "X-Requested-with, content-type");
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader("Access-Control-Allow-Credentials", true);
+    next();
+});
 // config template engine
 configViewEngine(app);
 
