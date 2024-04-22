@@ -7,6 +7,8 @@ const initAPIRoutesRole = require("./routes/roleRouter");
 const initAPIRoutesGroup = require("./routes/groupRouter");
 const initAPIRoutesGroupRole = require("./routes/groupRoleRouter");
 const initAPIRoutesUser = require("./routes/userRouter");
+const initAPIRoutesStudySet = require("./routes/studySetRouter");
+const initAPIRoutesCard = require("./routes/cardRouter");
 const app = express(); // app express
 const port = process.env.PORT;
 const hostname = process.env.HOST_NAME;
@@ -34,6 +36,8 @@ initAPIRoutesRole(app);
 initAPIRoutesGroup(app);
 initAPIRoutesGroupRole(app);
 initAPIRoutesUser(app);
+initAPIRoutesStudySet(app);
+initAPIRoutesCard(app);
 // run server
 app.listen(port, hostname, () => {
     console.log(`Example app listening on port ${port}`);

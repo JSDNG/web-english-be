@@ -44,18 +44,6 @@ Object.keys(db).forEach(function (modelName) {
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-// db.Account = require("./account.js")(sequelize, Sequelize);
-// db.Card = require("./card.js")(sequelize, Sequelize);
-// db.Class = require("./class.js")(sequelize, Sequelize);
-// db.Folder = require("./folder.js")(sequelize, Sequelize);
-// db.FolderDetail = require("./folderDetail.js")(sequelize, Sequelize);
-// db.Group = require("./group.js")(sequelize, Sequelize);
-// db.GroupRole = require("./groupRole.js")(sequelize, Sequelize);
-// db.Role = require("./role.js")(sequelize, Sequelize);
-// db.Student = require("./student.js")(sequelize, Sequelize);
-// db.StudySet = require("./studySet.js")(sequelize, Sequelize);
-// db.User = require("./user.js")(sequelize, Sequelize);
-
 // //Many-to-many relation between Group and Role
 // db.Group.belongsToMany(db.Role, { through: db.GroupRole });
 // db.Role.belongsToMany(db.Group, { through: db.GroupRole });

@@ -1,16 +1,8 @@
 const db = require("../models");
 
 const getAllGroupRole = async () => {
-    // test relationships
-    // let newgroup = await db.groupRole.findOne({
-    //     where: { id: 1 },
-    //     include: { model: db.group },
-    //     raw: true,
-    //     nest: true,
-    // });
-    // console.log(">>>> check ", newgroup);
     let lists = [];
-    lists = await db.groupRole.findAll();
+    lists = await db.GroupRole.findAll();
     return lists;
 };
 
