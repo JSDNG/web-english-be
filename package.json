@@ -1,35 +1,35 @@
 {
-  "name": "full-backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./src/server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/JSDNG/fullstack.git"
-  },
-  "keywords": [
-    "nodejs"
-  ],
-  "author": "duc quynh",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/JSDNG/fullstack/issues"
-  },
-  "homepage": "https://github.com/JSDNG/fullstack#readme",
-  "dependencies": {
-    "bcryptjs": "2.4.3",
-    "dotenv": "16.0.3",
-    "ejs": "3.1.8",
-    "express": "4.18.2",
-    "mysql2": "2.3.3",
-    "sequelize": "6.13.0",
-    "sequelize-cli": "6.3.0"
-  },
-  "devDependencies": {
-    "nodemon": "2.0.20"
-  }
+    "name": "full-backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon ./src/server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/JSDNG/web-english-be.git"
+    },
+    "keywords": [
+        "nodejs"
+    ],
+    "author": "duc quynh",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/JSDNG/web-english-be/issues"
+    },
+    "homepage": "https://github.com/JSDNG/web-english-be#readme",
+    "dependencies": {
+        "bcryptjs": "2.4.3",
+        "dotenv": "16.0.3",
+        "ejs": "3.1.8",
+        "express": "4.18.2",
+        "mysql2": "2.3.3",
+        "sequelize": "6.13.0",
+        "sequelize-cli": "6.3.0"
+    },
+    "devDependencies": {
+        "nodemon": "2.0.20"
+    }
 }
