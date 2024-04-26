@@ -2,16 +2,18 @@ const { getAllUser, getUserById, createNewUser, updateUserById, deleteUserById }
 
 const createUser = async (req, res) => {
     let { username, groupId, accountId } = req.body;
+
     if (!username) {
-        return res.status(200).json({
+        return res.status(400).json({
             EC: 1,
-            EM: "missing required params",
+            EM: "Missing required params",
         });
     } else {
         await createNewUser(username, groupId, accountId);
+        // Send success response
         res.status(200).json({
             EC: 0,
-            EM: "Create User",
+            EM: "User created successfully",
         });
     }
 };
@@ -74,8 +76,8 @@ const getUser = async (req, res) => {
     }
 };
 module.exports = {
-    getAllUsers,
     createUser,
+    getAllUsers,
     getUser,
     updateUser,
     deleteUser,

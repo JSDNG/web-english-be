@@ -6,24 +6,45 @@ const {
     deleteAccountById,
 } = require("../services/accountService");
 
-const createAccount = async (req, res) => {
-    let { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(200).json({
-            EC: 1,
-            EM: "missing required params",
-        });
-    } else {
-        await createNewAccount(email, password);
-        res.status(200).json({
-            EC: 0,
-            EM: "Create account",
+const { createNewUser } = require("../services/userService");
+const register = async (req, res) => {
+    try {
+        if (!req.body.email || !req.body.password || !req.body.username) {
+            return res.status(200).json({
+                EC: 1,
+                EM: "Missing required parameters",
+            });
+        } else {
+            console.log(".....");
+            let data = await createNewAccount(req.body);
+            if (data.EC === 1) {
+                return res.status(200).json({
+                    EC: data.EC,
+                    EM: data.EM,
+                });
+            }
+            let accountId = data.DT && data.DT.toString();
+
+            if (accountId) {
+                let data1 = await createNewUser(req.body.username, req.body.groupId, accountId);
+                return res.status(200).json({
+                    EC: data1.EC,
+                    EM: data1.EM,
+                });
+            }
+        }
+    } catch (e) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
         });
     }
 };
 
 const getAllAccounts = async (req, res) => {
     let results = await getAllAccount();
+
     return res.status(200).json({
         EC: 0,
         EM: "ok",
@@ -64,24 +85,26 @@ const deleteAccount = async (req, res) => {
 };
 
 const getAccount = async (req, res) => {
-    let id = req.params.id;
-    if (!id) {
+    let email = req.body.email;
+    console.log(">>>", req.body.email);
+    if (!email) {
         return res.status(200).json({
             EC: 1,
             EM: "missing required params",
         });
     } else {
-        let data = await getAccountById(id);
+        // let data = await getAccountById(id);
+        let data = await getAccountByEmail(email);
         return res.status(200).json({
             EC: 0,
             EM: "ok",
-            DT: data,
+            DT: data.id,
         });
     }
 };
 module.exports = {
     getAllAccounts,
-    createAccount,
+    register,
     getAccount,
     updateAccount,
     deleteAccount,

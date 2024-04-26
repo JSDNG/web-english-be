@@ -5,6 +5,60 @@ const salt = bcrypt.genSaltSync(10);
 const hashPass = (password) => {
     return bcrypt.hashSync(password, salt);
 };
+const checkEmail = async (email) => {
+    let account = await db.Account.findOne({
+        where: { email: email },
+    });
+
+    if (account) {
+        return true;
+    }
+    return false;
+};
+const checkUsername = async (username) => {
+    let user = await db.User.findOne({
+        where: { username: username },
+    });
+
+    if (user) {
+        return true;
+    }
+    return false;
+};
+const createNewAccount = async (rawData) => {
+    let hashpass = hashPass(rawData.password);
+    try {
+        let isEmail = await checkEmail(rawData.email);
+        if (isEmail === true) {
+            return {
+                EC: 1,
+                EM: "Email already exists",
+            };
+        }
+        let isUsername = await checkUsername(rawData.username);
+        if (isUsername === true) {
+            return {
+                EC: 1,
+                EM: "Username already exists",
+            };
+        } else {
+            let data = await db.Account.create({
+                email: rawData.email,
+                password: hashpass,
+            });
+            return {
+                EC: 0,
+                EM: "Account created successfully",
+                DT: data.id,
+            };
+        }
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+        };
+    }
+};
 const getAllAccount = async () => {
     let lists = [];
     lists = await db.Account.findAll();
@@ -17,19 +71,6 @@ const getAccountById = async (id) => {
     return data.get({ plain: true });
 };
 
-const createNewAccount = async (email, password) => {
-    let hashpass = hashPass(password);
-    try {
-        await db.Account.create({
-            email: email,
-            password: hashpass,
-        });
-    } catch (err) {
-        res.status(500).send({
-            message: err.message || "Some error occurred while creating the Account.",
-        });
-    }
-};
 const updateAccountById = async (password, id) => {
     await db.Account.update(
         {

@@ -1,5 +1,27 @@
 const db = require("../models");
 
+const createNewUser = async (username, groupId, accountId) => {
+    let image = "abc";
+    try {
+        await db.User.create({
+            username: username,
+            image: image,
+            createDate: Date.now(),
+            groupId: groupId,
+            accountId: accountId,
+        });
+        return {
+            EC: 0,
+            EM: "User created successfully",
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+        };
+    }
+};
+
 const getAllUser = async () => {
     let lists = [];
     lists = await db.User.findAll();
@@ -12,21 +34,6 @@ const getUserById = async (id) => {
     return data.get({ plain: true });
 };
 
-const createNewUser = async (username, groupId, accountId) => {
-    try {
-        await db.User.create({
-            username: username,
-            image: null,
-            createDate: Date.now,
-            groupId: groupId,
-            accountId: accountId,
-        });
-    } catch (err) {
-        res.status(500).send({
-            message: err.message || "Some error occurred while creating the User.",
-        });
-    }
-};
 const updateUserById = async (password, id) => {
     await db.User.update(
         {

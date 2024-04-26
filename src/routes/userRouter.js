@@ -1,10 +1,9 @@
 const express = require("express");
-const { getAllUsers, createUser, getUser, updateUser, deleteUser } = require("../controllers/userController");
+const { getAllUsers, getUser, updateUser, deleteUser, createUser } = require("../controllers/userController");
 const router = express.Router();
 
 const initAPIRoutes = (app) => {
     router.get("/user/info/:id", getUser);
-
     router.post("/user", createUser);
     router.get("/user/all", getAllUsers);
     router.put("/user/change-password", updateUser);
