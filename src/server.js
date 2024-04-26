@@ -15,6 +15,8 @@ const initAPIRoutesGroupRole = require("./routes/groupRoleRouter");
 const initAPIRoutesUser = require("./routes/userRouter");
 const initAPIRoutesStudySet = require("./routes/studySetRouter");
 const initAPIRoutesCard = require("./routes/cardRouter");
+const initAPIRoutesClass = require("./routes/classRouter");
+const initAPIRoutesMember = require("./routes/memberRouter");
 
 //config req.body
 app.use(express.json()); // Used to parse JSON bodies
@@ -42,6 +44,8 @@ initAPIRoutesGroupRole(app);
 initAPIRoutesUser(app);
 initAPIRoutesStudySet(app);
 initAPIRoutesCard(app);
+initAPIRoutesClass(app);
+initAPIRoutesMember(app);
 // run server
 app.listen(port, hostname, () => {
     console.log(`Example app listening on port ${port}`);

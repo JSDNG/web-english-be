@@ -25,7 +25,6 @@ const createNewCard = async (term, definition, studySetId) => {
     await db.Card.create({
         term: term,
         definition: definition,
-        studySetId: studySetId,
     });
 };
 const updateCardById = async (password, id) => {

@@ -8,10 +8,10 @@ const getAllRole = async () => {
         raw: true,
         nest: true,
     });
-    console.log(">>>> check ", roles);
-    let lists = [];
-    lists = await db.Role.findAll();
-    return lists;
+    // console.log(">>>> check ", roles);
+    // let lists = [];
+    // lists = await db.Role.findAll();
+    return { roles };
 };
 
 const getRoleById = async (id) => {
