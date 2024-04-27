@@ -8,15 +8,7 @@ const hostname = process.env.HOST_NAME;
 const db = require("./models");
 
 // const initWebRoutes = require("./routes/web");
-const initAPIRoutesAccount = require("./routes/accountRouter");
-const initAPIRoutesRole = require("./routes/roleRouter");
-const initAPIRoutesGroup = require("./routes/groupRouter");
-const initAPIRoutesGroupRole = require("./routes/groupRoleRouter");
-const initAPIRoutesUser = require("./routes/userRouter");
-const initAPIRoutesStudySet = require("./routes/studySetRouter");
-const initAPIRoutesCard = require("./routes/cardRouter");
-const initAPIRoutesClass = require("./routes/classRouter");
-const initAPIRoutesMember = require("./routes/memberRouter");
+const initAPIRoutesAccount = require("./routes/apiRouter");
 
 //config req.body
 app.use(express.json()); // Used to parse JSON bodies
@@ -38,14 +30,7 @@ db.sequelize
 
 // khai bao route
 initAPIRoutesAccount(app);
-initAPIRoutesRole(app);
-initAPIRoutesGroup(app);
-initAPIRoutesGroupRole(app);
-initAPIRoutesUser(app);
-initAPIRoutesStudySet(app);
-initAPIRoutesCard(app);
-initAPIRoutesClass(app);
-initAPIRoutesMember(app);
+
 // run server
 app.listen(port, hostname, () => {
     console.log(`Example app listening on port ${port}`);
