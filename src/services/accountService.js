@@ -1,7 +1,7 @@
 const db = require("../models");
 const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(10);
-
+const { Op } = require("sequelize");
 const hashPass = (password) => {
     return bcrypt.hashSync(password, salt);
 };
@@ -15,6 +15,9 @@ const checkEmail = async (email) => {
     }
     return false;
 };
+const checkPassword = (password, hashPassword) => {
+    return bcrypt.compareSync(password, hashPassword);
+};
 const checkUsername = async (username) => {
     let user = await db.User.findOne({
         where: { username: username },
@@ -25,7 +28,7 @@ const checkUsername = async (username) => {
     }
     return false;
 };
-const createNewAccount = async (rawData) => {
+const registerAccount = async (rawData) => {
     let hashpass = hashPass(rawData.password);
     try {
         let isEmail = await checkEmail(rawData.email);
@@ -52,6 +55,41 @@ const createNewAccount = async (rawData) => {
                 DT: data.id,
             };
         }
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+        };
+    }
+};
+
+const loginAcccount = async (rawData) => {
+    try {
+        let account = await db.Account.findOne({
+            // where: {
+            //     [Op.or]:[
+            //         {email: email},
+            //         {abc: abc}
+            //     ]
+            // }
+            where: {
+                email: rawData.email,
+            },
+        });
+        if (account) {
+            let isPassword = checkPassword(rawData.password, account.password);
+            if (isPassword === true) {
+                return {
+                    EC: 0,
+                    EM: "Login in successfully",
+                };
+            }
+        }
+        console.log(">>> Not found email");
+        return {
+            EC: 1,
+            EM: "Email or password is incorrect",
+        };
     } catch (err) {
         return {
             EC: -1,
@@ -92,7 +130,8 @@ const deleteAccountById = async (id) => {
 module.exports = {
     getAllAccount,
     getAccountById,
-    createNewAccount,
+    registerAccount,
+    loginAcccount,
     updateAccountById,
     deleteAccountById,
 };

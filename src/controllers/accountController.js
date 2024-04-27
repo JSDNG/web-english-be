@@ -1,7 +1,8 @@
 const {
     getAllAccount,
     getAccountById,
-    createNewAccount,
+    registerAccount,
+    loginAcccount,
     updateAccountById,
     deleteAccountById,
 } = require("../services/accountService");
@@ -23,7 +24,7 @@ const register = async (req, res) => {
             });
         }
         console.log(".....");
-        let data = await createNewAccount(req.body);
+        let data = await registerAccount(req.body);
         if (data.EC === 1) {
             return res.status(200).json({
                 EC: data.EC,
@@ -47,7 +48,20 @@ const register = async (req, res) => {
         });
     }
 };
-
+const login = async (req, res) => {
+    try {
+        let data = await loginAcccount(req.body);
+        return res.status(200).json({
+            EC: data.EC,
+            EM: data.EM,
+        });
+    } catch (e) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+        });
+    }
+};
 const getAllAccounts = async (req, res) => {
     let results = await getAllAccount();
 
@@ -111,6 +125,7 @@ const getAccount = async (req, res) => {
 module.exports = {
     getAllAccounts,
     register,
+    login,
     getAccount,
     updateAccount,
     deleteAccount,

@@ -40,19 +40,28 @@ const createNewClass = async (rawData) => {
 const getAllClass = async () => {
     try {
         // Relationships
-        // let results = [];
-        let results = await db.Class.findAll({
-            include: { model: db.User, where: { id: 1 }, attributes: ["id", "username", "image", "Member"] },
-            attributes: ["id", "className", "description"],
+        let { count, rows } = await db.Class.findAndCountAll({
+            where: { id: 2 },
+            include: { model: db.User, attributes: ["id", "username", "image"] },
+            attributes: ["id", "className", "description", "userId"],
             raw: true,
             nest: true,
         });
-        console.log(">>>> check ", results);
-        let data = results && results.length > 0 ? results : {};
+        // let results1 = await db.Class.findAndCountAll({
+        //     where: { id: 2 },
+        //     include: { model: db.User, attributes: ["id", "username", "image"] },
+        //     attributes: ["id", "className", "description", "userId"],
+        //     raw: true,
+        //     nest: true,
+        // });
+
+        // let data = results && results.length > 0 ? results : {};
+        // rows.push({ value: count })
+
         return {
             EC: 0,
             EM: " All class",
-            DT: data,
+            DT: rows,
         };
     } catch (err) {
         return {
