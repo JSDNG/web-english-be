@@ -95,7 +95,7 @@ const loginAcccount = async (rawData) => {
             if (isPassword === true) {
                 return {
                     EC: 0,
-                    EM: "Login in successfully",
+                    EM: "Login succeed",
                     DT: {
                         access_token: token,
                         data,

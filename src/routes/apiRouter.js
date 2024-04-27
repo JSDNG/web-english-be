@@ -7,7 +7,7 @@ const {
     register,
     login,
 } = require("../controllers/accountController");
-const router = express.Router();
+
 const { getAllCards, createCard, getCard, updateCard, deleteCard } = require("../controllers/cardController");
 const { getAllClasss, getClass, updateClass, deleteClass, createClass } = require("../controllers/classController");
 
@@ -29,6 +29,8 @@ const {
     deleteStudySet,
 } = require("../controllers/studySetController");
 const { getUser, updateUser, getUsers } = require("../controllers/userController");
+
+const router = express.Router();
 
 const initAPIRoutes = (app) => {
     // Account
@@ -93,7 +95,7 @@ const initAPIRoutes = (app) => {
     router.get("/user", getUsers);
     router.put("/user", updateUser);
 
-    return app.use("/api/", router);
+    return app.use("/api/v1/", router);
 };
 
 module.exports = initAPIRoutes; // export default
