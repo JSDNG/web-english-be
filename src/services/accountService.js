@@ -1,7 +1,10 @@
+require("dotenv").config();
 const db = require("../models");
 const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(10);
 const { Op } = require("sequelize");
+const getGroupWithRoles = require("./jwtService");
+const { createJWT } = require("../middleware/jwtAction");
 const hashPass = (password) => {
     return bcrypt.hashSync(password, salt);
 };
@@ -68,8 +71,8 @@ const loginAcccount = async (rawData) => {
         let account = await db.Account.findOne({
             // where: {
             //     [Op.or]:[
-            //         {email: email},
-            //         {abc: abc}
+            //         {email: rawData.emailorphone},
+            //         {phone: rawData.emailorphone}
             //     ]
             // }
             where: {
@@ -78,10 +81,25 @@ const loginAcccount = async (rawData) => {
         });
         if (account) {
             let isPassword = checkPassword(rawData.password, account.password);
+            let user = await db.User.findOne({
+                where: { accountId: account.id },
+            });
+
+            let data = await getGroupWithRoles(user.get({ plain: true }));
+            let payload = {
+                email: account.email,
+                data,
+                expiresIn: process.env.JWT_EXIRES_IN,
+            };
+            let token = createJWT(payload);
             if (isPassword === true) {
                 return {
                     EC: 0,
                     EM: "Login in successfully",
+                    DT: {
+                        access_token: token,
+                        data,
+                    },
                 };
             }
         }

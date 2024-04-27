@@ -54,6 +54,7 @@ const login = async (req, res) => {
         return res.status(200).json({
             EC: data.EC,
             EM: data.EM,
+            DT: data.DT,
         });
     } catch (e) {
         res.status(500).json({
