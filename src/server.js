@@ -9,6 +9,7 @@ const db = require("./models");
 
 // const initWebRoutes = require("./routes/web");
 const initAPIRoutesAccount = require("./routes/apiRouter");
+const { createJWT, verifyToken } = require("./middleware/jwtAction");
 
 //config req.body
 app.use(express.json()); // Used to parse JSON bodies
@@ -17,6 +18,8 @@ app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
 // config template engine
 configViewEngine(app);
 
+// test jwt
+createJWT();
 // config cors
 configCors(app);
 db.sequelize

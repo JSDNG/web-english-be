@@ -1,84 +1,74 @@
-const { getAllUser, getUserById, createNewUser, updateUserById, deleteUserById } = require("../services/userService");
-
-const createUser = async (req, res) => {
-    let { username, groupId, accountId } = req.body;
-
-    if (!username) {
-        return res.status(400).json({
-            EC: 1,
-            EM: "Missing required params",
-        });
-    } else {
-        await createNewUser(username, groupId, accountId);
-        // Send success response
-        res.status(200).json({
-            EC: 0,
-            EM: "User created successfully",
-        });
-    }
-};
-
-const getAllUsers = async (req, res) => {
-    let results = await getAllUser();
-    return res.status(200).json({
-        EC: 0,
-        EM: "ok",
-        DT: results,
-    });
-};
+const { getAllUser, getUserById, updateUserById, getUsersByPage } = require("../services/userService");
 
 const updateUser = async (req, res) => {
-    let { id, password } = req.body;
-    if (!id || !password) {
+    if (!req.body.id || !req.body.username || !req.body.image) {
         return res.status(200).json({
             EC: 1,
             EM: "missing required params",
         });
     } else {
-        await updateUserById(password, id);
+        let data = await updateUserById(req.body);
         return res.status(200).json({
-            EC: 0,
-            EM: "ok",
-        });
-    }
-};
-
-const deleteUser = async (req, res) => {
-    let id = req.params.id;
-    if (!id) {
-        return res.status(200).json({
-            EC: 1,
-            EM: "missing required params",
-        });
-    } else {
-        await deleteUserById(id);
-        return res.status(200).json({
-            EC: 0,
-            EM: "ok",
+            EC: data.EC,
+            EM: data.EM,
         });
     }
 };
 
 const getUser = async (req, res) => {
-    let id = req.params.id;
-    if (!id) {
-        return res.status(200).json({
+    try {
+        let id = req.params.id;
+        if (!id) {
+            return res.status(200).json({
+                EC: 1,
+                EM: "missing required params",
+            });
+        } else {
+            let data = await getUserById(id);
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
+    } catch (e) {
+        return res.status(500).json({
             EC: 1,
-            EM: "missing required params",
+            EM: "err",
+            DT: "",
         });
-    } else {
-        let data = await getUserById(id);
-        return res.status(200).json({
-            EC: 0,
-            EM: "ok",
-            DT: data,
+    }
+};
+
+const getUsers = async (req, res) => {
+    try {
+        if (req.query.page && req.query.limit) {
+            let page = req.query.page;
+            let limit = req.query.limit;
+            let data = await getUsersByPage(+page, +limit);
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        } else {
+            let data = await getAllUser();
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
+    } catch (e) {
+        return res.status(500).json({
+            EC: 1,
+            EM: "err",
+            DT: "",
         });
     }
 };
 module.exports = {
-    createUser,
-    getAllUsers,
     getUser,
     updateUser,
-    deleteUser,
+    getUsers,
 };

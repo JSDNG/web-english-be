@@ -28,7 +28,7 @@ const {
     updateStudySet,
     deleteStudySet,
 } = require("../controllers/studySetController");
-const { getAllUsers, getUser, updateUser, deleteUser, createUser } = require("../controllers/userController");
+const { getUser, updateUser, getUsers } = require("../controllers/userController");
 
 const initAPIRoutes = (app) => {
     // Account
@@ -90,10 +90,8 @@ const initAPIRoutes = (app) => {
 
     // User
     router.get("/user/info/:id", getUser);
-    router.post("/user", createUser);
-    router.get("/user/all", getAllUsers);
-    router.put("/user/change-password", updateUser);
-    router.delete("/user/:id", deleteUser);
+    router.get("/user", getUsers);
+    router.put("/user", updateUser);
 
     return app.use("/api/", router);
 };
