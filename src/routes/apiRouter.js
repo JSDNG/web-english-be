@@ -31,14 +31,9 @@ const {
 const { getUser, updateUser, getUsers } = require("../controllers/userController");
 const { checkUserJWT, checkUserPermission } = require("../middleware/jwtAction");
 const router = express.Router();
-// const checkUserLogin = (req, res, next) => {
-//     const nonSecurePaths = ["/", "/register", "/login"];
-//     if (nonSecurePaths.includes(req.path)) return next();
 
-//     //authenticate user
-//     next();
-// };
 const initAPIRoutes = (app) => {
+    router.all("*", checkUserJWT, checkUserPermission);
     // Account
     router.get("/account/findone", getAccount);
     router.post("/register", register);
