@@ -85,11 +85,10 @@ const loginAcccount = async (rawData) => {
                 where: { accountId: account.id },
             });
 
-            let data = await getGroupWithRoles(user.get({ plain: true }));
+            let dataRoles = await getGroupWithRoles(user.get({ plain: true }));
             let payload = {
                 email: account.email,
-                data,
-                expiresIn: process.env.JWT_EXIRES_IN,
+                dataRoles,
             };
             let token = createJWT(payload);
             if (isPassword === true) {
@@ -98,7 +97,10 @@ const loginAcccount = async (rawData) => {
                     EM: "Login succeed",
                     DT: {
                         access_token: token,
-                        data,
+                        email: account.email,
+                        username: user.username,
+                        image: user.image,
+                        dataRoles,
                     },
                 };
             }
