@@ -1,4 +1,4 @@
-const { createNewMember, updateMemberById } = require("../services/memberService");
+const { createNewMember, deleteMemberById } = require("../services/memberService");
 
 const createMember = async (req, res) => {
     try {
@@ -22,15 +22,14 @@ const createMember = async (req, res) => {
     }
 };
 
-const updateMember = async (req, res) => {
-    let { userId, classId, id } = req.body;
-    if (!userId || !classId) {
+const deleteMember = async (req, res) => {
+    if (!req.body.id) {
         return res.status(200).json({
             EC: 1,
             EM: "missing required params",
         });
     } else {
-        await updateMemberById(userId, classId, id);
+        await deleteMemberById(req.body.id);
         return res.status(200).json({
             EC: 0,
             EM: "ok",
@@ -40,5 +39,5 @@ const updateMember = async (req, res) => {
 
 module.exports = {
     createMember,
-    updateMember,
+    deleteMember,
 };

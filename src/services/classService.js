@@ -17,6 +17,7 @@ const createNewClass = async (rawData) => {
             return {
                 EC: 1,
                 EM: "Class already exists",
+                DT: "",
             };
         } else {
             await db.Class.create({
@@ -28,12 +29,14 @@ const createNewClass = async (rawData) => {
             return {
                 EC: 0,
                 EM: "Class created successfully",
+                DT: "",
             };
         }
     } catch (err) {
         return {
             EC: -1,
             EM: "Somthin wrongs in service... ",
+            DT: "",
         };
     }
 };
@@ -67,6 +70,7 @@ const getAllClass = async () => {
         return {
             EC: -1,
             EM: "Somthin wrongs in service... ",
+            DT: "",
         };
     }
 };
@@ -76,27 +80,52 @@ const getClassById = async (id) => {
         let results = await db.Class.findByPk(id);
         let data = results && results.length > 0 ? results : {};
         return {
-            EC: 1,
-            EM: " All class",
+            EC: 0,
+            EM: "Get class",
             DT: data.get({ plain: true }),
         };
     } catch (err) {
         return {
             EC: -1,
             EM: "Somthin wrongs in service... ",
+            DT: "",
         };
     }
 };
 
-const updateClassById = async (password, id) => {
-    await db.Class.update(
-        {
-            password,
-        },
-        {
-            where: { id: id },
+const updateClassById = async (rawData) => {
+    try {
+        // check rawData.userId
+        let isClass = checkClassName(rawData.checkClassName);
+        if (isClass) {
+            return {
+                EC: 1,
+                EM: "Class already exists",
+                DT: "",
+            };
+        } else {
+            await db.Class.update(
+                {
+                    className: rawData.className,
+                    description: rawData.description,
+                },
+                {
+                    where: { id: rawData.id },
+                }
+            );
+            return {
+                EC: 0,
+                EM: "Get class",
+                DT: data.get({ plain: true }),
+            };
         }
-    );
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 
 const deleteClassById = async (id) => {

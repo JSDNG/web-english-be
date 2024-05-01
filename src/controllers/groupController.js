@@ -7,17 +7,25 @@ const {
 } = require("../services/groupService");
 
 const createGroup = async (req, res) => {
-    let { name, description } = req.body;
-    if (!name || !description) {
-        return res.status(200).json({
-            EC: 1,
-            EM: "missing required params",
-        });
-    } else {
-        await createNewGroup(name, description);
-        res.status(200).json({
-            EC: 0,
-            EM: "Create Group",
+    try {
+        if (!req.body.name || !req.body.description) {
+            return res.status(200).json({
+                EC: 1,
+                EM: "missing required params",
+            });
+        } else {
+            let data = await createNewGroup(req.body);
+            res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
         });
     }
 };
@@ -32,17 +40,25 @@ const getAllGroups = async (req, res) => {
 };
 
 const updateGroup = async (req, res) => {
-    let { id, password } = req.body;
-    if (!id || !password) {
-        return res.status(200).json({
-            EC: 1,
-            EM: "missing required params",
-        });
-    } else {
-        await updateGroupById(password, id);
-        return res.status(200).json({
-            EC: 0,
-            EM: "ok",
+    try {
+        if (!req.body.name || !req.body.description || !req.body.id) {
+            return res.status(200).json({
+                EC: 1,
+                EM: "missing required params",
+            });
+        } else {
+            let data = await updateGroupById(req.body);
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
         });
     }
 };

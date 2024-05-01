@@ -1,75 +1,120 @@
 const { getAllCard, getCardById, createNewCard, updateCardById, deleteCardById } = require("../services/cardService");
 
 const createCard = async (req, res) => {
-    let { term, definition, studySetId } = req.body;
-    if (!term || !definition) {
-        return res.status(200).json({
-            EC: 1,
-            EM: "missing required params",
-        });
-    } else {
-        await createNewCard(term, definition, studySetId);
-        res.status(200).json({
-            EC: 0,
-            EM: "Create Card",
+    try {
+        if (!req.body.term || !req.body.definition || req.body.studySetId) {
+            return res.status(200).json({
+                EC: 1,
+                EM: "missing required params",
+                DT: "",
+            });
+        } else {
+            let data = await createNewCard(req.body);
+            res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
         });
     }
 };
 
 const getAllCards = async (req, res) => {
-    let results = await getAllCard();
-    return res.status(200).json({
-        EC: 0,
-        EM: "ok",
-        DT: results,
-    });
+    try {
+        let data = await getAllCard();
+        return res.status(200).json({
+            EC: data.EC,
+            EM: data.EM,
+            DT: data.DT,
+        });
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
+        });
+    }
 };
 
 const updateCard = async (req, res) => {
-    let { id, password } = req.body;
-    if (!id || !password) {
-        return res.status(200).json({
-            EC: 1,
-            EM: "missing required params",
-        });
-    } else {
-        await updateCardById(password, id);
-        return res.status(200).json({
-            EC: 0,
-            EM: "ok",
+    try {
+        if (!req.body.id || !req.body.term || !req.body.definition || !req.body.studySetId) {
+            return res.status(200).json({
+                EC: 1,
+                EM: "missing required params",
+                DT: "",
+            });
+        } else {
+            let data = await updateCardById(req.body);
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
         });
     }
 };
 
 const deleteCard = async (req, res) => {
-    let id = req.params.id;
-    if (!id) {
-        return res.status(200).json({
-            EC: 1,
-            EM: "missing required params",
-        });
-    } else {
-        await deleteCardById(id);
-        return res.status(200).json({
-            EC: 0,
-            EM: "ok",
+    try {
+        let id = req.params.id;
+        if (!id) {
+            return res.status(200).json({
+                EC: 1,
+                EM: "missing required params",
+                DT: "",
+            });
+        } else {
+            let data = await deleteCardById(id);
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
         });
     }
 };
 
 const getCard = async (req, res) => {
-    let id = req.params.id;
-    if (!id) {
-        return res.status(200).json({
-            EC: 1,
-            EM: "missing required params",
-        });
-    } else {
-        let data = await getCardById(id);
-        return res.status(200).json({
-            EC: 0,
-            EM: "ok",
-            DT: data,
+    try {
+        let id = req.params.id;
+        if (!id) {
+            return res.status(200).json({
+                EC: 1,
+                EM: "missing required params",
+                DT: "",
+            });
+        } else {
+            let data = await getCardById(id);
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
         });
     }
 };

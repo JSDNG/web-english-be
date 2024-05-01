@@ -1,5 +1,4 @@
 const db = require("../models");
-const group = require("../models/group");
 
 const getAllGroup = async () => {
     let lists = [];
@@ -8,32 +7,53 @@ const getAllGroup = async () => {
 };
 
 const getGroupById = async (id) => {
-    let data = await db.Group.findByPk(id);
-    //let data = results && results.length > 0 ? results : {};
+    let results = await db.Group.findByPk(id);
+    let data = results && results.length > 0 ? results : {};
     return data.get({ plain: true });
 };
 
-const createNewGroup = async (name, description) => {
+const createNewGroup = async (rawData) => {
     try {
         await db.Group.create({
-            name: name,
-            description: description,
+            name: rawData.name,
+            description: rawData.description,
         });
+        return {
+            EC: 0,
+            EM: "ok",
+            DT: "",
+        };
     } catch (err) {
-        res.status(500).send({
-            message: err.message || "Some error occurred while creating the Group.",
-        });
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
     }
 };
-const updateGroupById = async (password, id) => {
-    await db.Group.update(
-        {
-            password,
-        },
-        {
-            where: { id: id },
-        }
-    );
+const updateGroupById = async (rawData) => {
+    try {
+        await db.Group.update(
+            {
+                name: rawData.name,
+                description: rawData.description,
+            },
+            {
+                where: { id: rawData.id },
+            }
+        );
+        return {
+            EC: 0,
+            EM: "OK",
+            DT: "",
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 
 const deleteGroupById = async (id) => {

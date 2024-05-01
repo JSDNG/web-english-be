@@ -1,7 +1,7 @@
 const { getAllUser, getUserById, updateUserById, getUsersByPage } = require("../services/userService");
 
 const updateUser = async (req, res) => {
-    if (!req.body.id || !req.body.username || !req.body.image) {
+    if (!req.body.id || !req.body.username) {
         return res.status(200).json({
             EC: 1,
             EM: "missing required params",

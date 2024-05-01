@@ -20,27 +20,47 @@ const getRoleById = async (id) => {
     return data.get({ plain: true });
 };
 
-const createNewRole = async (url, description) => {
+const createNewRole = async (rawData) => {
     try {
         await db.Role.create({
-            url: url,
-            description: description,
+            url: rawData.url,
+            description: rawData.description,
         });
+        return {
+            EC: 0,
+            EM: "ok",
+            DT: "",
+        };
     } catch (err) {
-        res.status(500).send({
-            message: err.message || "Some error occurred while creating the Role.",
-        });
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
     }
 };
 const updateRoleById = async (password, id) => {
-    await db.Role.update(
-        {
-            password,
-        },
-        {
-            where: { id: id },
-        }
-    );
+    try {
+        await db.Role.update(
+            {
+                password,
+            },
+            {
+                where: { id: id },
+            }
+        );
+        return {
+            EC: 0,
+            EM: "OK",
+            DT: "",
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 
 const deleteRoleById = async (id) => {

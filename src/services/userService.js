@@ -22,53 +22,58 @@ const createNewUser = async (username, groupId, accountId) => {
         return {
             EC: 0,
             EM: "User created successfully",
+            DT: "",
         };
     } catch (err) {
         return {
             EC: -1,
             EM: "Somthin wrongs in service... ",
+            DT: "",
         };
     }
 };
 
 const getAllUser = async () => {
     try {
-        let lists = await db.User.findAll({
+        let results = await db.User.findAll({
             attributes: ["id", "username", "image"],
             include: [
                 { model: db.Group, attributes: ["name", "description"] },
                 { model: db.Account, attributes: ["email"] },
             ],
         });
-        if (lists) {
-            return {
-                EM: "get data success",
-                EC: 0,
-                DT: lists,
-            };
-        } else {
-            return {
-                EM: "get data success",
-                EC: 0,
-                DT: "",
-            };
-        }
+
+        let data = results && results.length > 0 ? results : {};
+        return {
+            EC: 0,
+            EM: "get data success",
+            DT: data,
+        };
     } catch (e) {
         return {
             EC: -1,
             EM: "Somthin wrongs in service... ",
+            DT: "",
         };
     }
 };
 
 const getUserById = async (id) => {
-    let data = await db.User.findByPk(id);
-    //let data = results && results.length > 0 ? results : {};
-    return {
-        EC: 0,
-        EM: "get success",
-        DT: data.get({ plain: true }),
-    };
+    try {
+        let results = await db.User.findByPk(id);
+        let data = results && results.length > 0 ? results : {};
+        return {
+            EC: 0,
+            EM: "get success",
+            DT: data.get({ plain: true }),
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 
 const updateUserById = async (rawData) => {
@@ -78,6 +83,7 @@ const updateUserById = async (rawData) => {
             return {
                 EC: 1,
                 EM: "Username already exists",
+                DT: "",
             };
         }
         if (rawData.image) {
@@ -93,6 +99,7 @@ const updateUserById = async (rawData) => {
             return {
                 EC: 0,
                 EM: "User updated successfully",
+                DT: "",
             };
         } else {
             let user = await db.User.update(
@@ -106,12 +113,14 @@ const updateUserById = async (rawData) => {
             return {
                 EC: 0,
                 EM: "User updated successfully",
+                DT: "",
             };
         }
     } catch (err) {
         return {
             EC: -1,
             EM: "Somthin wrongs in service... ",
+            DT: "",
         };
     }
 };
@@ -142,6 +151,7 @@ const getUsersByPage = async (page, limit) => {
         return {
             EC: -1,
             EM: "Somthin wrongs in service... ",
+            DT: "",
         };
     }
 };

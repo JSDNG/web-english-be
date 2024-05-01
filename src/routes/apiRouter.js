@@ -2,24 +2,25 @@ const express = require("express");
 const {
     getAllAccounts,
     getAccount,
-    updateAccount,
-    deleteAccount,
+    changePassword,
     register,
     login,
+    logout,
 } = require("../controllers/accountController");
 
 const { getAllCards, createCard, getCard, updateCard, deleteCard } = require("../controllers/cardController");
-const { getAllClasss, getClass, updateClass, deleteClass, createClass } = require("../controllers/classController");
-
+const { getAllClasses, getClass, updateClass, deleteClass, createClass } = require("../controllers/classController");
+const { createFolderDetail, updateFolderDetail } = require("../controllers/folderDetailController");
 const {
-    getAllGroupRoles,
-    createGroupRole,
-    getGroupRole,
-    updateGroupRole,
-    deleteGroupRole,
-} = require("../controllers/groupRoleController");
+    getAllFolders,
+    getFolder,
+    updateFolder,
+    deleteFolder,
+    createFolder,
+} = require("../controllers/folderController");
+const { createGroupRole, deleteGroupRole } = require("../controllers/groupRoleController");
 const { getAllGroups, createGroup, getGroup, updateGroup, deleteGroup } = require("../controllers/groupController");
-const { updateMember, createMember } = require("../controllers/memberController");
+const { deleteMember, createMember } = require("../controllers/memberController");
 const { getAllRoles, createRole, getRole, updateRole, deleteRole } = require("../controllers/roleController");
 const {
     getAllStudySets,
@@ -33,68 +34,71 @@ const { checkUserJWT, checkUserPermission } = require("../middleware/jwtAction")
 const router = express.Router();
 
 const initAPIRoutes = (app) => {
-    router.all("*", checkUserJWT, checkUserPermission);
+    //router.all("*", checkUserJWT, checkUserPermission);
     // Account
     router.get("/account/findone", getAccount);
     router.post("/register", register);
     router.post("/login", login);
+    router.post("/logout", logout);
     router.get("/account/all", getAllAccounts);
-    router.put("/account/change-password", updateAccount);
-    router.delete("/account/:id", deleteAccount);
+    router.put("/account/change-password", changePassword);
 
     // Card
-    router.get("/card/info/:id", getCard);
+    //router.get("/card/:id", getCard);
     router.post("/card", createCard);
-    router.get("/card/all", getAllCards);
-    router.put("/card/change-password", updateCard);
+    //router.get("/card/all", getAllCards);
+    router.put("/card", updateCard);
     router.delete("/card/:id", deleteCard);
 
     // Class
-    router.get("/class/info/:id", getClass);
-    router.get("/class/all", getAllClasss);
-    router.get("/class/findone", getClass);
+    router.get("/class/:id", getClass);
+    router.get("/class/all", getAllClasses);
     router.post("/class", createClass);
-    router.put("/class/change-password", updateClass);
-    router.delete("/class/:id", deleteClass);
+    router.put("/class", updateClass);
+    //router.delete("/class/:id", deleteClass);
 
     // FolderDetail
+    router.post("/folderdetail", createFolderDetail);
+    router.put("/folderdetail", updateFolderDetail);
+
     // Folder
+    router.get("/folder/all", getAllFolders);
+    router.get("/folder/:id", getFolder);
+    router.post("/folder", createFolder);
+    router.put("/folder", updateFolder);
+    router.delete("/folder/:id", deleteFolder);
+
     // groupRole
-    router.get("/grouprole/info/:id", getGroupRole);
     router.post("/grouprole", createGroupRole);
-    router.get("/grouprole/all", getAllGroupRoles);
-    router.put("/grouprole/change-password", updateGroupRole);
     router.delete("/grouprole/:id", deleteGroupRole);
 
     // Group
-    router.get("/group/info/:id", getGroup);
     router.post("/group", createGroup);
-    router.get("/group/all", getAllGroups);
-    router.put("/group/change-password", updateGroup);
+    router.put("/group", updateGroup);
     router.delete("/group/:id", deleteGroup);
 
     // Member
     router.post("/member", createMember);
-    router.put("/member", updateMember);
+    router.delete("/member/:id", deleteMember);
 
     // Role
-    router.get("/role/info/:id", getRole);
+    //router.get("/role/info/:id", getRole);
     router.post("/role", createRole);
-    router.get("/role/all", getAllRoles);
-    router.put("/role/change-password", updateRole);
+    //router.get("/role/all", getAllRoles);
+    router.put("/role", updateRole);
     router.delete("/Role/:id", deleteRole);
 
     // StudySet
     router.get("/studyset/info/:id", getStudySet);
     router.post("/studyset", createStudySet);
     router.get("/studyset/all", getAllStudySets);
-    router.put("/studyset/change-password", updateStudySet);
+    router.put("/studyset", updateStudySet);
     router.delete("/studyset/:id", deleteStudySet);
 
     // User
     router.get("/user/info/:id", getUser);
     router.get("/user", getUsers);
-    router.put("/user", updateUser);
+    router.put("/profile", updateUser);
 
     return app.use("/api/v1/", router);
 };

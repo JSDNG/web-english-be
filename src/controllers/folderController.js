@@ -1,45 +1,27 @@
 const {
-    getAllAccount,
-    getAccountById,
-    createNewAccount,
-    updateAccountById,
-    deleteAccountById,
-} = require("../services/accountService");
+    getAllFolder,
+    getFolderById,
+    createNewFolder,
+    updateFolderById,
+    deleteFolderById,
+} = require("../services/folderService");
 
-const { createNewUser } = require("../services/userService");
-const register = async (req, res) => {
+const createFolder = async (req, res) => {
     try {
-        if (!req.body.email || !req.body.password || !req.body.username) {
+        if (!req.body.folderName || !req.body.userId) {
             return res.status(200).json({
                 EC: 1,
                 EM: "Missing required parameters",
+                DT: "",
             });
         }
-
-        if (req.body.password.length < 6) {
-            return res.status(200).json({
-                EC: 1,
-                EM: "Your password must have at least 6 characters",
-            });
-        }
-        console.log(".....");
-        let data = await createNewAccount(req.body);
-        if (data.EC === 1) {
-            return res.status(200).json({
-                EC: data.EC,
-                EM: data.EM,
-            });
-        }
-        let accountId = data.DT && data.DT.toString();
-
-        if (accountId) {
-            let data1 = await createNewUser(req.body.username, req.body.groupId, accountId);
-            return res.status(200).json({
-                EC: data1.EC,
-                EM: data1.EM,
-            });
-        }
-    } catch (e) {
+        let data = await createNewFolder(req.body);
+        return res.status(200).json({
+            EC: data.EC,
+            EM: data.EM,
+            DT: "",
+        });
+    } catch (err) {
         res.status(500).json({
             EC: -1,
             EM: "error from server",
@@ -48,70 +30,103 @@ const register = async (req, res) => {
     }
 };
 
-const getAllAccounts = async (req, res) => {
-    let results = await getAllAccount();
-
-    return res.status(200).json({
-        EC: 0,
-        EM: "ok",
-        DT: results,
-    });
-};
-
-const updateAccount = async (req, res) => {
-    let { id, password } = req.body;
-    if (!id || !password) {
+const getAllFolders = async (req, res) => {
+    try {
+        let data = await getAllFolder();
         return res.status(200).json({
-            EC: 1,
-            EM: "missing required params",
+            EC: data.EC,
+            EM: data.EM,
+            DT: data.DT,
         });
-    } else {
-        await updateAccountById(password, id);
-        return res.status(200).json({
-            EC: 0,
-            EM: "ok",
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
         });
     }
 };
 
-const deleteAccount = async (req, res) => {
-    let id = req.params.id;
-    if (!id) {
-        return res.status(200).json({
-            EC: 1,
-            EM: "missing required params",
-        });
-    } else {
-        await deleteAccountById(id);
-        return res.status(200).json({
-            EC: 0,
-            EM: "ok",
+const updateFolder = async (req, res) => {
+    try {
+        if (!req.body.id || !req.body.folderName || req.body.userId) {
+            return res.status(200).json({
+                EC: 1,
+                EM: "missing required params",
+                DT: "",
+            });
+        } else {
+            let data = await updateFolderById(req.body);
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
         });
     }
 };
 
-const getAccount = async (req, res) => {
-    let email = req.body.email;
-    console.log(">>>", req.body.email);
-    if (!email) {
-        return res.status(200).json({
-            EC: 1,
-            EM: "missing required params",
+const deleteFolder = async (req, res) => {
+    try {
+        let id = req.params.id;
+        if (!id) {
+            return res.status(200).json({
+                EC: 1,
+                EM: "missing required params",
+                DT: "",
+            });
+        } else {
+            let data = await deleteFolderById(id);
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
         });
-    } else {
-        // let data = await getAccountById(id);
-        let data = await getAccountByEmail(email);
-        return res.status(200).json({
-            EC: 0,
-            EM: "ok",
-            DT: data.id,
+    }
+};
+
+const getFolder = async (req, res) => {
+    try {
+        let id = req.params.id;
+        if (!id) {
+            return res.status(200).json({
+                EC: 1,
+                EM: "missing required params",
+                DT: "",
+            });
+        } else {
+            let data = await getFolderById(id);
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
         });
     }
 };
 module.exports = {
-    getAllAccounts,
-    register,
-    getAccount,
-    updateAccount,
-    deleteAccount,
+    getAllFolders,
+    createFolder,
+    getFolder,
+    updateFolder,
+    deleteFolder,
 };

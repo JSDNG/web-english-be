@@ -18,19 +18,28 @@ const createNewMember = async (rawData) => {
     }
 };
 
-const updateMemberById = async (userId, classId, id) => {
-    await db.Member.update(
-        {
-            userId: userId,
-            classId: classId,
-        },
-        {
-            where: { id: id },
-        }
-    );
+const deleteMemberById = async (id) => {
+    try {
+        await db.Member.destroy({
+            where: {
+                id: id,
+            },
+        });
+        return {
+            EC: 0,
+            EM: "Deleted",
+            DT: "",
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 
 module.exports = {
     createNewMember,
-    updateMemberById,
+    deleteMemberById,
 };

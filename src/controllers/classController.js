@@ -8,10 +8,11 @@ const {
 
 const createClass = async (req, res) => {
     try {
-        if (!req.body.className || !req.body.description) {
+        if (!req.body.className || !req.body.description || req.body.userId) {
             return res.status(200).json({
                 EC: 1,
                 EM: "Missing required parameters",
+                DT: "",
             });
         }
         let data = await createNewClass(req.body);
@@ -19,6 +20,7 @@ const createClass = async (req, res) => {
         return res.status(200).json({
             EC: data.EC,
             EM: data.EM,
+            DT: data.DT,
         });
     } catch (e) {
         res.status(500).json({
@@ -29,28 +31,44 @@ const createClass = async (req, res) => {
     }
 };
 
-const getAllClasss = async (req, res) => {
-    let data = await getAllClass();
+const getAllClasses = async (req, res) => {
+    try {
+        let data = await getAllClass();
 
-    return res.status(200).json({
-        EC: data.EC,
-        EM: data.EM,
-        DT: data.DT,
-    });
+        return res.status(200).json({
+            EC: data.EC,
+            EM: data.EM,
+            DT: data.DT,
+        });
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
+        });
+    }
 };
 
 const updateClass = async (req, res) => {
-    let { id, password } = req.body;
-    if (!id || !password) {
-        return res.status(200).json({
-            EC: 1,
-            EM: "missing required params",
-        });
-    } else {
-        await updateClassById(password, id);
-        return res.status(200).json({
-            EC: 0,
-            EM: "ok",
+    try {
+        if (!req.body.className || !req.body.description || req.body.id || req.body.userId) {
+            return res.status(200).json({
+                EC: 1,
+                EM: "missing required params",
+                DT: "",
+            });
+        } else {
+            await updateClassById(req.body);
+            return res.status(200).json({
+                EC: 0,
+                EM: "ok",
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
         });
     }
 };
@@ -72,25 +90,24 @@ const deleteClass = async (req, res) => {
 };
 
 const getClass = async (req, res) => {
-    let email = req.body.email;
-    console.log(">>>", req.body.email);
-    if (!email) {
+    let id = req.params.id;
+    if (!id) {
         return res.status(200).json({
             EC: 1,
             EM: "missing required params",
+            DT: "",
         });
     } else {
-        // let data = await getClassById(id);
-        let data = await getClassByEmail(email);
+        let data = await getClassById(id);
         return res.status(200).json({
-            EC: 0,
-            EM: "ok",
-            DT: data.id,
+            EC: data.EC,
+            EM: data.EM,
+            DT: data.DT,
         });
     }
 };
 module.exports = {
-    getAllClasss,
+    getAllClasses,
     createClass,
     getClass,
     updateClass,

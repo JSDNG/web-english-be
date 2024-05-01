@@ -31,6 +31,7 @@ const checkUsername = async (username) => {
     }
     return false;
 };
+
 const registerAccount = async (rawData) => {
     let hashpass = hashPass(rawData.password);
     try {
@@ -39,6 +40,7 @@ const registerAccount = async (rawData) => {
             return {
                 EC: 1,
                 EM: "Email already exists",
+                DT: "",
             };
         }
         let isUsername = await checkUsername(rawData.username);
@@ -46,6 +48,7 @@ const registerAccount = async (rawData) => {
             return {
                 EC: 1,
                 EM: "Username already exists",
+                DT: "",
             };
         } else {
             let data = await db.Account.create({
@@ -62,11 +65,12 @@ const registerAccount = async (rawData) => {
         return {
             EC: -1,
             EM: "Somthin wrongs in service... ",
+            DT: "",
         };
     }
 };
 
-const loginAcccount = async (rawData) => {
+const loginAccount = async (rawData) => {
     try {
         let account = await db.Account.findOne({
             // where: {
@@ -97,6 +101,7 @@ const loginAcccount = async (rawData) => {
                     EM: "Login succeed",
                     DT: {
                         access_token: token,
+                        refresh_token: "refresh_token",
                         email: account.email,
                         username: user.username,
                         image: user.image,
@@ -109,49 +114,99 @@ const loginAcccount = async (rawData) => {
         return {
             EC: 1,
             EM: "Email or password is incorrect",
+            DT: "",
         };
     } catch (err) {
         return {
             EC: -1,
             EM: "Somthin wrongs in service... ",
+            DT: "",
         };
     }
 };
 const getAllAccount = async () => {
-    let lists = [];
-    lists = await db.Account.findAll();
-    return lists;
+    try {
+        let lists = await db.Account.findAll();
+        return {
+            EC: 0,
+            EM: "Get all",
+            DT: lists,
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 
 const getAccountById = async (id) => {
-    let data = await db.Account.findByPk(id);
-    //let data = results && results.length > 0 ? results : {};
-    return data.get({ plain: true });
+    try {
+        let data = await db.Account.findByPk(id);
+        //let data = results && results.length > 0 ? results : {};
+        return {
+            EC: 0,
+            EM: "Get data",
+            DT: data.get({ plain: true }),
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 
-const updateAccountById = async (password, id) => {
-    await db.Account.update(
-        {
-            password,
-        },
-        {
-            where: { id: id },
+const updateAccountById = async (rawData) => {
+    try {
+        let account = await db.Account.findOne({
+            // where: {
+            //     [Op.or]:[
+            //         {email: rawData.emailorphone},
+            //         {phone: rawData.emailorphone}
+            //     ]
+            // }
+            where: {
+                email: rawData.email,
+            },
+        });
+        let isPassword = checkPassword(rawData.current_password, account.password);
+        if (isPassword === true) {
+            await db.Account.update(
+                {
+                    password: rawData.new_password,
+                },
+                {
+                    where: { id: id },
+                }
+            );
+            return {
+                EC: 0,
+                EM: "Change password",
+                DT: "",
+            };
+        } else {
+            return {
+                EC: 1,
+                EM: " password",
+                DT: "",
+            };
         }
-    );
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 
-const deleteAccountById = async (id) => {
-    await db.Account.destroy({
-        where: {
-            id: id,
-        },
-    });
-};
 module.exports = {
     getAllAccount,
     getAccountById,
     registerAccount,
-    loginAcccount,
+    loginAccount,
     updateAccountById,
-    deleteAccountById,
 };

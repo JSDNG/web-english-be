@@ -1,3 +1,4 @@
+const { raw } = require("express");
 const db = require("../models");
 
 const getAllCard = async () => {
@@ -10,40 +11,106 @@ const getAllCard = async () => {
     // });
 
     // console.log(">>>> check ", roles);
-    let lists = [];
-    lists = await db.Card.findAll();
-    return lists;
+    try {
+        let results = await db.Card.findAll();
+        let data = results && results.length > 0 ? results : {};
+        return {
+            EC: 0,
+            EM: "Get success",
+            DT: data,
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 
 const getCardById = async (id) => {
-    let data = await db.Card.findByPk(id);
-    //let data = results && results.length > 0 ? results : {};
-    return data.get({ plain: true });
+    try {
+        let results = await db.Card.findByPk(id);
+        let data = results && results.length > 0 ? results : {};
+        return {
+            EC: 0,
+            EM: "Get success",
+            data: data.get({ plain: true }),
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 
-const createNewCard = async (term, definition, studySetId) => {
-    await db.Card.create({
-        term: term,
-        definition: definition,
-    });
+const createNewCard = async (rawData) => {
+    try {
+        await db.Card.create({
+            term: rawData.term,
+            definition: rawData.definition,
+            studySetId: rawData.studySetId,
+        });
+        return {
+            EC: 0,
+            EM: "Create card success",
+            DT: "",
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
-const updateCardById = async (password, id) => {
-    await db.Card.update(
-        {
-            password,
-        },
-        {
-            where: { id: id },
-        }
-    );
+const updateCardById = async (rawData) => {
+    try {
+        await db.Card.update(
+            {
+                term: rawData.term,
+                definition: rawData.definition,
+                studySetId: rawData.studySetId,
+            },
+            {
+                where: { id: id },
+            }
+        );
+        return {
+            EC: 0,
+            EM: "Card updated success",
+            DT: "",
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 
 const deleteCardById = async (id) => {
-    await db.Card.destroy({
-        where: {
-            id: id,
-        },
-    });
+    try {
+        await db.Card.destroy({
+            where: {
+                id: id,
+            },
+        });
+        return {
+            EC: 0,
+            EM: "Deleted",
+            DT: "",
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 module.exports = {
     getAllCard,
