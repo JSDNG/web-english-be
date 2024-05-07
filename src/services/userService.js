@@ -27,7 +27,7 @@ const createNewUser = async (username, groupId, accountId) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }
@@ -52,7 +52,7 @@ const getAllUser = async () => {
     } catch (e) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }
@@ -60,8 +60,8 @@ const getAllUser = async () => {
 
 const getUserById = async (id) => {
     try {
-        let results = await db.User.findByPk(id);
-        let data = results && results.length > 0 ? results : {};
+        let data = await db.User.findByPk(id);
+        //let data = results && results.length > 0 ? results : {};
         return {
             EC: 0,
             EM: "get success",
@@ -70,7 +70,7 @@ const getUserById = async (id) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }
@@ -119,7 +119,7 @@ const updateUserById = async (rawData) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }
@@ -150,7 +150,7 @@ const getUsersByPage = async (page, limit) => {
     } catch (e) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }

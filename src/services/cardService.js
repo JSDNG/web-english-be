@@ -48,15 +48,11 @@ const getCardById = async (id) => {
 
 const createNewCard = async (rawData) => {
     try {
-        await db.Card.create({
-            term: rawData.term,
-            definition: rawData.definition,
-            studySetId: rawData.studySetId,
-        });
+        await db.Card.bulkCreate(rawData);
         return {
             EC: 0,
             EM: "Create card success",
-            DT: "",
+            DT: rawData,
         };
     } catch (err) {
         return {

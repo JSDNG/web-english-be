@@ -5,7 +5,7 @@ const {
     updateStudySetById,
     deleteStudySetById,
 } = require("../services/studySetService");
-
+const { createNewCard } = require("../services/cardService");
 const createStudySet = async (req, res) => {
     try {
         if (!req.body.studySetName || !req.body.userId) {
@@ -16,11 +16,19 @@ const createStudySet = async (req, res) => {
             });
         } else {
             let data = await createNewStudySet(req.body);
-            res.status(200).json({
-                EC: data.EC,
-                EM: data.EM,
-                DT: data.DT,
-            });
+            let studySetId = data.DT && data.DT.toString();
+            if (studySetId) {
+                const cards = req.body.card.map((item, index) => ({
+                    ...item,
+                    studySetId: studySetId, // Tạo ra một cardId cho mỗi card
+                }));
+                let data1 = await createNewCard(cards);
+                return res.status(200).json({
+                    EC: data1.EC,
+                    EM: data1.EM,
+                    DT: "",
+                });
+            }
         }
     } catch (err) {
         res.status(500).json({

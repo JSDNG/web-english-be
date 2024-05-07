@@ -2,7 +2,7 @@ const { getAllCard, getCardById, createNewCard, updateCardById, deleteCardById }
 
 const createCard = async (req, res) => {
     try {
-        if (!req.body.term || !req.body.definition || !req.body.studySetId) {
+        if (!req.body) {
             return res.status(200).json({
                 EC: 1,
                 EM: "missing required params",
@@ -95,21 +95,20 @@ const deleteCard = async (req, res) => {
 
 const getCard = async (req, res) => {
     try {
-        let id = req.params.id;
-        if (!id) {
-            return res.status(200).json({
-                EC: 1,
-                EM: "missing required params",
-                DT: "",
-            });
-        } else {
-            let data = await getCardById(id);
-            return res.status(200).json({
-                EC: data.EC,
-                EM: data.EM,
-                DT: data.DT,
-            });
-        }
+        // if (!id) {
+        //     return res.status(200).json({
+        //         EC: 1,
+        //         EM: "missing required params",
+        //         DT: "",
+        //     });
+        // } else {
+        //     let data = await getCardById(id);
+        //     return res.status(200).json({
+        //         EC: data.EC,
+        //         EM: data.EM,
+        //         DT: data.DT,
+        //     });
+        // }
     } catch (err) {
         res.status(500).json({
             EC: -1,

@@ -44,7 +44,6 @@ const getAllClass = async () => {
     try {
         // Relationships
         let { count, rows } = await db.Class.findAndCountAll({
-            where: { id: 2 },
             include: { model: db.User, attributes: ["id", "username", "image"] },
             attributes: ["id", "className", "description", "userId"],
             raw: true,

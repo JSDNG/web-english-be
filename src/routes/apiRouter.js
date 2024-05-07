@@ -44,9 +44,9 @@ const initAPIRoutes = (app) => {
     router.put("/account/change-password", changePassword);
 
     // Card
-    //router.get("/card/:id", getCard);
+    router.get("/card", getCard);
     router.post("/card", createCard);
-    //router.get("/card/all", getAllCards);
+    //router.get("/card", getAllCards);
     router.put("/card", updateCard);
     router.delete("/card/:id", deleteCard);
 
@@ -69,6 +69,7 @@ const initAPIRoutes = (app) => {
     router.delete("/folder/:id", deleteFolder);
 
     // groupRole
+
     router.post("/grouprole", createGroupRole);
     router.delete("/grouprole/:id", deleteGroupRole);
 
@@ -84,7 +85,7 @@ const initAPIRoutes = (app) => {
     // Role
     //router.get("/role/info/:id", getRole);
     router.post("/role", createRole);
-    //router.get("/role/all", getAllRoles);
+    router.get("/role", getAllRoles);
     router.put("/role", updateRole);
     router.delete("/Role/:id", deleteRole);
 
@@ -97,7 +98,7 @@ const initAPIRoutes = (app) => {
 
     // User
     router.get("/user/:id", getUser);
-    //router.get("/user", getUsers);
+    router.get("/user", getUsers);
     router.put("/user", updateUser);
 
     return app.use("/api/v1/", router);

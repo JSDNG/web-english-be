@@ -32,6 +32,7 @@ const getUser = async (req, res) => {
             return res.status(200).json({
                 EC: 1,
                 EM: "missing required params",
+                DT: "",
             });
         } else {
             let data = await getUserById(id);

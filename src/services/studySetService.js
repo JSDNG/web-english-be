@@ -2,16 +2,29 @@ const db = require("../models");
 
 const getAllStudySet = async () => {
     try {
-        let data = await db.StudySet.findAll({
-            include: { model: db.Card, attributes: ["id", "term", "definition", "studySetId"] },
+        const { rows: data } = await db.StudySet.findAndCountAll({
+            include: { model: db.Card, attributes: [] }, // Không cần lấy attributes của Card, chỉ cần đếm số lượng
             attributes: ["id", "studySetName", "userId"],
+            raw: true,
+            nest: true,
+            group: ["StudySet.id"],
         });
-        console.log(data);
-        //let data = results && results.length > 0 ? results : {};
+
+        // Đếm tổng số card trong mỗi study set và cập nhật rows
+        for (let i = 0; i < data.length; i++) {
+            const studySet = data[i];
+            const cardCount = await db.Card.count({ where: { studySetId: studySet.id } });
+            studySet.cardCount = cardCount; // Thêm thuộc tính cardCount vào mỗi study set
+        }
+        for (let j = 0; j < data.length; j++) {
+            const studySet = data[j];
+            let userInfo = await db.User.findByPk(studySet.userId, { attributes: ["id", "username", "image"] });
+            studySet.userId = userInfo.get({ plain: true });
+        }
         return {
             EC: 0,
-            EM: "Get All Study Set",
-            DT: data,
+            EM: "Get All Study Sets",
+            DT: data, // Trả về tổng số study set và danh sách study set kèm theo số card
         };
     } catch (err) {
         console.log(err);
@@ -25,8 +38,15 @@ const getAllStudySet = async () => {
 
 const getStudySetById = async (id) => {
     try {
-        let data = await db.StudySet.findByPk(id);
+        let data = await db.StudySet.findOne({
+            where: { id: id },
+            include: { model: db.Card, attributes: ["id", "term", "definition"] },
+            attributes: ["id", "studySetName", "userId"],
+        });
         //let data = results && results.length > 0 ? results : {};
+
+        let userInfo = await db.User.findByPk(data.userId, { attributes: ["id", "username", "image"] });
+        data.userId = userInfo.get({ plain: true });
         return {
             EC: 0,
             EM: "Get one study set",
@@ -51,7 +71,7 @@ const createNewStudySet = async (rawData) => {
         return {
             EC: 0,
             EM: "Create Study Set",
-            DT: "",
+            DT: data.id,
         };
     } catch (err) {
         return {
