@@ -17,19 +17,28 @@ const createNewFolderDetail = async (rawData) => {
         };
     }
 };
-const updateFolderDetailById = async (rawData) => {
-    await db.FolderDetail.update(
-        {
-            folderId: rawData.folderId,
-            studySetId: rawData.studySetId,
-        },
-        {
-            where: { id: rawData.id },
-        }
-    );
+const deleteFolderDetailById = async (id) => {
+    try {
+        await db.FolderDetail.destroy({
+            where: {
+                id: id,
+            },
+        });
+        return {
+            EC: 0,
+            EM: "OK",
+            DT: "",
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 
 module.exports = {
     createNewFolderDetail,
-    updateFolderDetailById,
+    deleteFolderDetailById,
 };

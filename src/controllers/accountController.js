@@ -132,16 +132,14 @@ const changePassword = async (req, res) => {
 };
 
 const getAccount = async (req, res) => {
-    let email = req.body.email;
-    console.log(">>>", req.body.email);
-    if (!email) {
+    let id = req.params.id;
+    if (!id) {
         return res.status(200).json({
             EC: 1,
             EM: "missing required params",
         });
     } else {
-        // let data = await getAccountById(id);
-        let data = await getAccountByEmail(email);
+        let data = await getAccountById(id);
         return res.status(200).json({
             EC: 0,
             EM: "ok",

@@ -1,23 +1,44 @@
+const { raw } = require("express");
 const db = require("../models");
 
 const getAllRole = async () => {
-    // test relationships
-    let roles = await db.Role.findAll({
-        include: { model: db.Group, where: { id: 1 }, attributes: ["name", "description"] },
-        attributes: ["id", "url", "description"],
-        raw: true,
-        nest: true,
-    });
-    // console.log(">>>> check ", roles);
-    // let lists = [];
-    // lists = await db.Role.findAll();
-    return { roles };
+    try {
+        // test relationships
+        let roles = await db.Role.findAll({
+            include: { model: db.Group, where: { id: 1 }, attributes: ["name", "description"] },
+            attributes: ["id", "url", "description"],
+            raw: true,
+            nest: true,
+        });
+        // console.log(">>>> check ", roles);
+        // let lists = [];
+        // lists = await db.Role.findAll();
+        return { EC: 0, EM: "ok", DT: roles };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 
 const getRoleById = async (id) => {
-    let data = await db.Role.findByPk(id);
-    //let data = results && results.length > 0 ? results : {};
-    return data.get({ plain: true });
+    try {
+        let results = await db.Role.findByPk(id);
+        let data = results && results.length > 0 ? results : {};
+        return {
+            EC: 0,
+            EM: "Get Role",
+            DT: data.get({ plain: true }),
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 
 const createNewRole = async (rawData) => {
@@ -39,14 +60,15 @@ const createNewRole = async (rawData) => {
         };
     }
 };
-const updateRoleById = async (password, id) => {
+const updateRoleById = async (rawData) => {
     try {
         await db.Role.update(
             {
-                password,
+                url: rawData.url,
+                description: rawData.description,
             },
             {
-                where: { id: id },
+                where: { id: rawData.id },
             }
         );
         return {
@@ -64,11 +86,24 @@ const updateRoleById = async (password, id) => {
 };
 
 const deleteRoleById = async (id) => {
-    await db.Role.destroy({
-        where: {
-            id: id,
-        },
-    });
+    try {
+        await db.Role.destroy({
+            where: {
+                id: id,
+            },
+        });
+        return {
+            EC: 0,
+            EM: "Delete",
+            DT: "",
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Somthin wrongs in service... ",
+            DT: "",
+        };
+    }
 };
 module.exports = {
     getAllRole,

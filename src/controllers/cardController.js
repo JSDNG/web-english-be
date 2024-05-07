@@ -2,7 +2,7 @@ const { getAllCard, getCardById, createNewCard, updateCardById, deleteCardById }
 
 const createCard = async (req, res) => {
     try {
-        if (!req.body.term || !req.body.definition || req.body.studySetId) {
+        if (!req.body.term || !req.body.definition || !req.body.studySetId) {
             return res.status(200).json({
                 EC: 1,
                 EM: "missing required params",

@@ -10,7 +10,7 @@ const {
 
 const { getAllCards, createCard, getCard, updateCard, deleteCard } = require("../controllers/cardController");
 const { getAllClasses, getClass, updateClass, deleteClass, createClass } = require("../controllers/classController");
-const { createFolderDetail, updateFolderDetail } = require("../controllers/folderDetailController");
+const { createFolderDetail, deleteFolderDetail } = require("../controllers/folderDetailController");
 const {
     getAllFolders,
     getFolder,
@@ -40,7 +40,7 @@ const initAPIRoutes = (app) => {
     router.post("/register", register);
     router.post("/login", login);
     router.post("/logout", logout);
-    router.get("/account/all", getAllAccounts);
+    router.get("/account", getAllAccounts);
     router.put("/account/change-password", changePassword);
 
     // Card
@@ -52,17 +52,17 @@ const initAPIRoutes = (app) => {
 
     // Class
     router.get("/class/:id", getClass);
-    router.get("/class/all", getAllClasses);
+    router.get("/class", getAllClasses);
     router.post("/class", createClass);
     router.put("/class", updateClass);
     //router.delete("/class/:id", deleteClass);
 
     // FolderDetail
     router.post("/folderdetail", createFolderDetail);
-    router.put("/folderdetail", updateFolderDetail);
+    router.delete("/folderdetail/:id", deleteFolderDetail);
 
     // Folder
-    router.get("/folder/all", getAllFolders);
+    router.get("/folder", getAllFolders);
     router.get("/folder/:id", getFolder);
     router.post("/folder", createFolder);
     router.put("/folder", updateFolder);
@@ -89,16 +89,16 @@ const initAPIRoutes = (app) => {
     router.delete("/Role/:id", deleteRole);
 
     // StudySet
-    router.get("/studyset/info/:id", getStudySet);
+    router.get("/studyset/:id", getStudySet);
     router.post("/studyset", createStudySet);
-    router.get("/studyset/all", getAllStudySets);
+    router.get("/studyset", getAllStudySets);
     router.put("/studyset", updateStudySet);
     router.delete("/studyset/:id", deleteStudySet);
 
     // User
-    router.get("/user/info/:id", getUser);
-    router.get("/user", getUsers);
-    router.put("/profile", updateUser);
+    router.get("/user/:id", getUser);
+    //router.get("/user", getUsers);
+    router.put("/user", updateUser);
 
     return app.use("/api/v1/", router);
 };

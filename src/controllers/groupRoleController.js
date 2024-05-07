@@ -1,4 +1,4 @@
-const { createNewGroupRole, updateGroupRoleById } = require("../services/groupRoleService");
+const { createNewGroupRole, deleteGroupRoleById } = require("../services/groupRoleService");
 
 const createGroupRole = async (req, res) => {
     try {
@@ -35,7 +35,7 @@ const deleteGroupRole = async (req, res) => {
                 DT: "",
             });
         } else {
-            let data = await updateGroupRoleById(req.body.id);
+            let data = await deleteGroupRoleById(req.body.id);
             return res.status(200).json({
                 EC: data.EC,
                 EM: data.EM,

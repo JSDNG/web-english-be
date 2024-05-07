@@ -75,7 +75,7 @@ const updateCardById = async (rawData) => {
                 studySetId: rawData.studySetId,
             },
             {
-                where: { id: id },
+                where: { id: rawData.id },
             }
         );
         return {

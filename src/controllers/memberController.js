@@ -29,10 +29,11 @@ const deleteMember = async (req, res) => {
             EM: "missing required params",
         });
     } else {
-        await deleteMemberById(req.body.id);
+        let data = await deleteMemberById(req.body.id);
         return res.status(200).json({
-            EC: 0,
-            EM: "ok",
+            EC: data.EC,
+            EM: data.EM,
+            DT: data.DT,
         });
     }
 };

@@ -1,16 +1,26 @@
 const { getAllUser, getUserById, updateUserById, getUsersByPage } = require("../services/userService");
 
 const updateUser = async (req, res) => {
-    if (!req.body.id || !req.body.username) {
-        return res.status(200).json({
-            EC: 1,
-            EM: "missing required params",
-        });
-    } else {
-        let data = await updateUserById(req.body);
-        return res.status(200).json({
-            EC: data.EC,
-            EM: data.EM,
+    try {
+        if (!req.body.id || !req.body.username) {
+            return res.status(200).json({
+                EC: 1,
+                EM: "missing required params",
+                DT: "",
+            });
+        } else {
+            let data = await updateUserById(req.body);
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
         });
     }
 };

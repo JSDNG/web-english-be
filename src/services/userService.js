@@ -79,7 +79,7 @@ const getUserById = async (id) => {
 const updateUserById = async (rawData) => {
     try {
         let isUsername = await checkUsername(rawData.username);
-        if (isUsername === true) {
+        if (isUsername) {
             return {
                 EC: 1,
                 EM: "Username already exists",
