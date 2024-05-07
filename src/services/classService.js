@@ -35,7 +35,7 @@ const createNewClass = async (rawData) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrong with the server... ",
             DT: "",
         };
     }
@@ -43,32 +43,32 @@ const createNewClass = async (rawData) => {
 const getAllClass = async () => {
     try {
         // Relationships
-        let { count, rows } = await db.Class.findAndCountAll({
-            include: { model: db.User, attributes: ["id", "username", "image"] },
+        let { count, rows: data } = await db.Class.findAndCountAll({
+            //include: { model: db.User, attributes: [] },
             attributes: ["id", "className", "description", "userId"],
             raw: true,
             nest: true,
         });
-        // let results1 = await db.Class.findAndCountAll({
-        //     where: { id: 2 },
-        //     include: { model: db.User, attributes: ["id", "username", "image"] },
-        //     attributes: ["id", "className", "description", "userId"],
-        //     raw: true,
-        //     nest: true,
-        // });
-
-        // let data = results && results.length > 0 ? results : {};
-        // rows.push({ value: count })
-
+        // for (let i = 0; i < data.length; i++) {
+        //     const count = data[i];
+        //     const member = await db.User.count({ where: { studySetId: studySet.id } });
+        //     count.member = member;
+        // }
+        for (let j = 0; j < data.length; j++) {
+            const temp = data[j];
+            let userInfo = await db.User.findByPk(temp.userId, { attributes: ["id", "username", "image"] });
+            temp.userId = userInfo.get({ plain: true });
+        }
+        data.push({ value: count });
         return {
             EC: 0,
             EM: " All class",
-            DT: rows,
+            DT: data,
         };
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrong with the server... ",
             DT: "",
         };
     }
@@ -86,7 +86,7 @@ const getClassById = async (id) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrong with the server... ",
             DT: "",
         };
     }
@@ -121,7 +121,7 @@ const updateClassById = async (rawData) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrong with the server... ",
             DT: "",
         };
     }

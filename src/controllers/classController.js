@@ -8,7 +8,7 @@ const {
 
 const createClass = async (req, res) => {
     try {
-        if (!req.body.className || !req.body.description || req.body.userId) {
+        if (!req.body.className || !req.body.description || !req.body.userId) {
             return res.status(200).json({
                 EC: 1,
                 EM: "Missing required parameters",

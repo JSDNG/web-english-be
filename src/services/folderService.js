@@ -5,6 +5,7 @@ const createNewFolder = async (rawData) => {
         if (rawData.classId) {
             let data = await db.Folder.create({
                 folderName: rawData.folderName,
+                createDate: Date.now(),
                 userId: rawData.userId,
                 classId: rawData.classId,
             });
@@ -16,6 +17,7 @@ const createNewFolder = async (rawData) => {
         } else {
             let data = await db.Folder.create({
                 folderName: rawData.folderName,
+                createDate: Date.now(),
                 userId: rawData.userId,
             });
             return {
@@ -27,42 +29,63 @@ const createNewFolder = async (rawData) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrong with the server... ",
             DT: "",
         };
     }
 };
 const getAllFolder = async () => {
     try {
-        let results = await db.Folder.findAll();
-        let data = results && results.length > 0 ? results : {};
+        //let results = await db.Folder.findAll();
+        // let data = results && results.length > 0 ? results : {};
+        const data = await db.Folder.findAll({
+            include: { model: db.StudySet, attributes: [] },
+            attributes: ["id", "folderName", "createDate", "userId", "classId"],
+            raw: true,
+            nest: true,
+            //distinct: true,
+        });
+        for (let j = 0; j < data.length; j++) {
+            const folder = data[j];
+            let userInfo = await db.User.findByPk(folder.userId, { attributes: ["id", "username", "image"] });
+            folder.userId = userInfo.get({ plain: true });
+        }
         return {
             EC: 0,
-            EM: "",
+            EM: "Get all Folder",
             DT: data,
         };
     } catch (err) {
+        console.log(err);
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrong with the server... ",
             DT: "",
         };
     }
 };
 
-const getFolderById = async (rawData) => {
+const getFolderById = async (id) => {
     try {
-        let results = await db.Folder.findByPk(rawData);
-        let data = results && results.length > 0 ? results : {};
+        let data = await db.Folder.findOne({
+            where: { id: id },
+            include: { model: db.StudySet, attributes: ["id", "studySetName", "userId"] },
+            attributes: ["id", "folderName", "createDate", "userId", "classId"],
+        });
+        //let data = results && results.length > 0 ? results : {};
+
+        let userInfo = await db.User.findByPk(data.userId, { attributes: ["id", "username", "image"] });
+        data.userId = userInfo.get({ plain: true });
         return {
             EC: 0,
-            EM: "Get folder",
+            EM: "Get one Folder",
             DT: data.get({ plain: true }),
         };
     } catch (err) {
+        console.log(err);
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrong with the server... ",
             DT: "",
         };
     }
@@ -89,7 +112,6 @@ const updateFolderById = async (rawData) => {
             let data = await db.Folder.update(
                 {
                     folderName: rawData.folderName,
-                    userId: rawData.userId,
                 },
                 {
                     where: { id: rawData.id },
@@ -103,7 +125,7 @@ const updateFolderById = async (rawData) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrong with the server... ",
         };
     }
 };
@@ -123,7 +145,7 @@ const deleteFolderById = async (rawData) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrong with the server... ",
             DT: "",
         };
     }

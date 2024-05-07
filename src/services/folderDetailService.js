@@ -4,16 +4,17 @@ const createNewFolderDetail = async (rawData) => {
     try {
         let data = await db.FolderDetail.create({
             folderId: rawData.folderId,
-            studySetId: studySetId,
+            studySetId: rawData.studySetId,
         });
         return {
             EC: 0,
             EM: "FolderDetail created successfully",
         };
     } catch (err) {
+        console.log(err);
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrong with the server... ",
         };
     }
 };
@@ -32,7 +33,7 @@ const deleteFolderDetailById = async (id) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrong with the server... ",
             DT: "",
         };
     }

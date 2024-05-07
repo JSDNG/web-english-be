@@ -49,7 +49,7 @@ const getAllFolders = async (req, res) => {
 
 const updateFolder = async (req, res) => {
     try {
-        if (!req.body.id || !req.body.folderName || req.body.userId) {
+        if (!req.body.id || !req.body.folderName || !req.body.userId) {
             return res.status(200).json({
                 EC: 1,
                 EM: "missing required params",

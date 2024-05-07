@@ -2,7 +2,7 @@ const db = require("../models");
 
 const getAllStudySet = async () => {
     try {
-        const { rows: data } = await db.StudySet.findAndCountAll({
+        const data = await db.StudySet.findAll({
             include: { model: db.Card, attributes: [] }, // Không cần lấy attributes của Card, chỉ cần đếm số lượng
             attributes: ["id", "studySetName", "userId"],
             raw: true,
