@@ -39,12 +39,23 @@ const getAllFolder = async () => {
         //let results = await db.Folder.findAll();
         // let data = results && results.length > 0 ? results : {};
         const data = await db.Folder.findAll({
-            include: { model: db.StudySet, attributes: [] },
-            attributes: ["id", "folderName", "createDate", "userId", "classId"],
+            attributes: [
+                "id",
+                "folderName",
+                "createDate",
+                "userId",
+                "classId",
+                [db.sequelize.fn("COUNT", db.sequelize.col("StudySets.id")), "studySetCount"],
+            ],
+            include: { model: db.StudySet, attributes: [], through: { attributes: [] } },
+
             raw: true,
             nest: true,
-            //distinct: true,
+            group: ["Folder.id"],
         });
+
+        // Sắp xếp data theo createDate giảm dần
+        data.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
         for (let j = 0; j < data.length; j++) {
             const folder = data[j];
             let userInfo = await db.User.findByPk(folder.userId, { attributes: ["id", "username", "image"] });
@@ -69,7 +80,7 @@ const getFolderById = async (id) => {
     try {
         let data = await db.Folder.findOne({
             where: { id: id },
-            include: { model: db.StudySet, attributes: ["id", "studySetName", "userId"] },
+            include: { model: db.StudySet, attributes: ["id", "studySetName", "userId"], through: { attributes: [] } },
             attributes: ["id", "folderName", "createDate", "userId", "classId"],
         });
         //let data = results && results.length > 0 ? results : {};

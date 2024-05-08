@@ -3,19 +3,28 @@ const db = require("../models");
 const getAllStudySet = async () => {
     try {
         const data = await db.StudySet.findAll({
+            attributes: [
+                "id",
+                "studySetName",
+                "createDate",
+                "userId",
+                [db.sequelize.fn("COUNT", db.sequelize.col("Cards.id")), "cards"],
+            ],
             include: { model: db.Card, attributes: [] }, // Không cần lấy attributes của Card, chỉ cần đếm số lượng
-            attributes: ["id", "studySetName", "userId"],
+
             raw: true,
             nest: true,
             group: ["StudySet.id"],
         });
 
-        // Đếm tổng số card trong mỗi study set và cập nhật rows
-        for (let i = 0; i < data.length; i++) {
-            const studySet = data[i];
-            const cardCount = await db.Card.count({ where: { studySetId: studySet.id } });
-            studySet.cardCount = cardCount; // Thêm thuộc tính cardCount vào mỗi study set
-        }
+        // Sắp xếp data theo createDate giảm dần
+        data.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+        // // Đếm tổng số card trong mỗi study set và cập nhật rows
+        // for (let i = 0; i < data.length; i++) {
+        //     const studySet = data[i];
+        //     const cardCount = await db.Card.count({ where: { studySetId: studySet.id } });
+        //     studySet.cardCount = cardCount; // Thêm thuộc tính cardCount vào mỗi study set
+        // }
         for (let j = 0; j < data.length; j++) {
             const studySet = data[j];
             let userInfo = await db.User.findByPk(studySet.userId, { attributes: ["id", "username", "image"] });

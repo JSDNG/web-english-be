@@ -43,29 +43,34 @@ const createNewClass = async (rawData) => {
 const getAllClass = async () => {
     try {
         // Relationships
-        let { count, rows: data } = await db.Class.findAndCountAll({
-            //include: { model: db.User, attributes: [] },
-            attributes: ["id", "className", "description", "userId"],
+        let { rows: data } = await db.Class.findAndCountAll({
+            attributes: [
+                "id",
+                "className",
+                "createDate",
+                "description",
+                "userId",
+                [db.sequelize.fn("COUNT", db.sequelize.col("Users.id")), "member"],
+            ],
+            include: { model: db.User, attributes: [], through: { attributes: [] } },
             raw: true,
             nest: true,
+            group: ["Class.id"],
         });
-        // for (let i = 0; i < data.length; i++) {
-        //     const count = data[i];
-        //     const member = await db.User.count({ where: { studySetId: studySet.id } });
-        //     count.member = member;
-        // }
+        // Sắp xếp data theo createDate giảm dần
+        data.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
         for (let j = 0; j < data.length; j++) {
             const temp = data[j];
             let userInfo = await db.User.findByPk(temp.userId, { attributes: ["id", "username", "image"] });
             temp.userId = userInfo.get({ plain: true });
         }
-        data.push({ value: count });
         return {
             EC: 0,
             EM: " All class",
             DT: data,
         };
     } catch (err) {
+        console.log(err);
         return {
             EC: -1,
             EM: "Something wrong with the server... ",
@@ -76,11 +81,18 @@ const getAllClass = async () => {
 
 const getClassById = async (id) => {
     try {
-        let results = await db.Class.findByPk(id);
-        let data = results && results.length > 0 ? results : {};
+        let data = await db.Class.findOne({
+            where: { id: id },
+            attributes: ["id", "className", "createDate", "description", "userId"],
+            include: { model: db.Folder, attributes: ["id", "folderName", "userId", "classId"] },
+            include: { model: db.User, attributes: ["id", "username", "image"], through: { attributes: [] } },
+        });
+
+        let userInfo = await db.User.findByPk(data.userId, { attributes: ["id", "username", "image"] });
+        data.userId = userInfo.get({ plain: true });
         return {
             EC: 0,
-            EM: "Get class",
+            EM: "Get one class",
             DT: data.get({ plain: true }),
         };
     } catch (err) {
