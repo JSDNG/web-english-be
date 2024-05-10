@@ -20,7 +20,7 @@ const createStudySet = async (req, res) => {
             if (studySetId) {
                 const cards = req.body.card.map((item, index) => ({
                     ...item,
-                    studySetId: studySetId, // Tạo ra một cardId cho mỗi card
+                    studySetId: studySetId,
                 }));
                 let data1 = await createNewCard(cards);
                 return res.status(200).json({
@@ -58,7 +58,7 @@ const getAllStudySets = async (req, res) => {
 
 const updateStudySet = async (req, res) => {
     try {
-        if (!req.body.studySetName || !req.body.userId || !req.body.id) {
+        if (!req.body.studySetName || !req.body.id) {
             return res.status(200).json({
                 EC: 1,
                 EM: "missing required params",

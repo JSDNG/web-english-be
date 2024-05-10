@@ -104,48 +104,34 @@ const getFolderById = async (id) => {
 
 const updateFolderById = async (rawData) => {
     try {
-        // check rawData.userId
-        if (rawData.classId) {
-            await db.Folder.update(
-                {
-                    folderName: rawData.folderName,
-                    classId: rawData.classId,
-                },
-                {
-                    where: { id: rawData.id },
-                }
-            );
-            return {
-                EC: 0,
-                EM: "Folder updated successfully",
-            };
-        } else {
-            let data = await db.Folder.update(
-                {
-                    folderName: rawData.folderName,
-                },
-                {
-                    where: { id: rawData.id },
-                }
-            );
-            return {
-                EC: 0,
-                EM: "Folder updated successfully",
-            };
-        }
+        await db.Folder.update(
+            {
+                folderName: rawData.folderName,
+                classId: rawData.classId,
+            },
+            {
+                where: { id: rawData.id },
+            }
+        );
+        return {
+            EC: 0,
+            EM: "Folder updated successfully",
+            DT: "",
+        };
     } catch (err) {
         return {
             EC: -1,
             EM: "Something wrong with the server... ",
+            DT: "",
         };
     }
 };
 
-const deleteFolderById = async (rawData) => {
+const deleteFolderById = async (id) => {
     try {
         await db.Folder.destroy({
             where: {
-                id: rawData,
+                id: id,
             },
         });
         return {

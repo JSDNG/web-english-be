@@ -106,7 +106,6 @@ const getClassById = async (id) => {
 
 const updateClassById = async (rawData) => {
     try {
-        // check rawData.userId
         let isClass = checkClassName(rawData.checkClassName);
         if (isClass) {
             return {
@@ -126,8 +125,8 @@ const updateClassById = async (rawData) => {
             );
             return {
                 EC: 0,
-                EM: "Get class",
-                DT: data.get({ plain: true }),
+                EM: "Class updated",
+                DT: "",
             };
         }
     } catch (err) {
@@ -140,11 +139,24 @@ const updateClassById = async (rawData) => {
 };
 
 const deleteClassById = async (id) => {
-    await db.Class.destroy({
-        where: {
-            id: id,
-        },
-    });
+    try {
+        let data = await db.Class.destroy({
+            where: {
+                id: id,
+            },
+        });
+        return {
+            EC: 0,
+            EM: "Class deleted",
+            DT: "",
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Something wrong with the server... ",
+            DT: "",
+        };
+    }
 };
 module.exports = {
     getAllClass,
