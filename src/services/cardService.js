@@ -1,6 +1,15 @@
 const { raw } = require("express");
 const db = require("../models");
 
+const checkCardId = async (data) => {
+    let id = await db.Card.findOne({
+        where: { id: data },
+    });
+    if (id) {
+        return true;
+    }
+    return false;
+};
 const getAllCard = async () => {
     // test relationships
     // let newgroup = await db.Card.findOne({
@@ -22,7 +31,7 @@ const getAllCard = async () => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }
@@ -40,7 +49,7 @@ const getCardById = async (id) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }
@@ -52,37 +61,46 @@ const createNewCard = async (rawData) => {
         return {
             EC: 0,
             EM: "Create card success",
-            DT: rawData,
+            DT: "",
         };
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }
 };
 const updateCardById = async (rawData) => {
     try {
-        await db.Card.update(
-            {
-                term: rawData.term,
-                definition: rawData.definition,
-                studySetId: rawData.studySetId,
-            },
-            {
-                where: { id: rawData.id },
-            }
-        );
-        return {
-            EC: 0,
-            EM: "Card updated success",
-            DT: "",
-        };
+        let isCardId = checkCardId(rawData.id);
+        if (isCardId === true) {
+            await db.Card.update(
+                {
+                    term: rawData.term,
+                    definition: rawData.definition,
+                },
+                {
+                    where: { id: rawData.id },
+                }
+            );
+            return {
+                EC: 0,
+                EM: "Card updated success",
+                DT: "",
+            };
+        } else {
+            return {
+                EC: 1,
+                EM: "CardId does not exist",
+                DT: "",
+            };
+        }
     } catch (err) {
+        console.log(err);
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }
@@ -103,7 +121,7 @@ const deleteCardById = async (id) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }

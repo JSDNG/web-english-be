@@ -44,7 +44,7 @@ const getAllCards = async (req, res) => {
 
 const updateCard = async (req, res) => {
     try {
-        if (!req.body.id || !req.body.term || !req.body.definition || !req.body.studySetId) {
+        if (!req.body.card.id || !req.body.card.term || !req.body.card.definition || !req.body.card.studySetId) {
             return res.status(200).json({
                 EC: 1,
                 EM: "missing required params",

@@ -5,7 +5,7 @@ const {
     updateStudySetById,
     deleteStudySetById,
 } = require("../services/studySetService");
-const { createNewCard } = require("../services/cardService");
+const { createNewCard, updateCardById, deleteCardById } = require("../services/cardService");
 const createStudySet = async (req, res) => {
     try {
         if (!req.body.studySetName || !req.body.userId) {
@@ -26,7 +26,7 @@ const createStudySet = async (req, res) => {
                 return res.status(200).json({
                     EC: data1.EC,
                     EM: data1.EM,
-                    DT: "",
+                    DT: data1.DT,
                 });
             }
         }
@@ -58,7 +58,7 @@ const getAllStudySets = async (req, res) => {
 
 const updateStudySet = async (req, res) => {
     try {
-        if (!req.body.studySetName || !req.body.id) {
+        if (!req.body.studySetName || !req.body.id || !req.body.userId) {
             return res.status(200).json({
                 EC: 1,
                 EM: "missing required params",
@@ -66,13 +66,25 @@ const updateStudySet = async (req, res) => {
             });
         } else {
             let data = await updateStudySetById(req.body);
+            const item = req.body.card.map(async (item) => {
+                if (item.status === "0") {
+                    item.studySetId = req.body.id;
+                    delete item.status;
+                    await createNewCard([item]);
+                } else if (item.status === "1") {
+                    await updateCardById(item);
+                } else if (item.status === "2") {
+                    await deleteCardById(item.id);
+                }
+            });
             return res.status(200).json({
                 EC: data.EC,
-                EM: data.EC,
+                EM: data.EM,
                 DT: data.DT,
             });
         }
     } catch (err) {
+        console.log(err);
         res.status(500).json({
             EC: -1,
             EM: "error from server",

@@ -64,7 +64,7 @@ const registerAccount = async (rawData) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }
@@ -119,7 +119,7 @@ const loginAccount = async (rawData) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }
@@ -135,7 +135,7 @@ const getAllAccount = async () => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }
@@ -153,7 +153,7 @@ const getAccountById = async (id) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }
@@ -197,7 +197,7 @@ const updateAccountById = async (rawData) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }

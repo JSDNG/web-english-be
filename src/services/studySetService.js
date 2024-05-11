@@ -102,7 +102,7 @@ const updateStudySetById = async (rawData) => {
         );
         return {
             EC: 0,
-            EM: "Updated",
+            EM: "Updated Study Set",
             DT: "",
         };
     } catch (err) {
