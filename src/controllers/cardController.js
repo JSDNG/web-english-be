@@ -85,6 +85,7 @@ const deleteCard = async (req, res) => {
             });
         }
     } catch (err) {
+        console.log(err);
         res.status(500).json({
             EC: -1,
             EM: "error from server",

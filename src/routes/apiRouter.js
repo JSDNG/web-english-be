@@ -44,11 +44,11 @@ const initAPIRoutes = (app) => {
     router.put("/account/change-password", changePassword);
 
     // Card
-    router.get("/card", getCard);
+    //router.get("/card", getCard);
     router.post("/card", createCard);
     //router.get("/card", getAllCards);
-    router.put("/card", updateCard);
-    router.delete("/card/:id", deleteCard);
+    //router.put("/card", updateCard);
+    //router.delete("/card/:id", deleteCard);
 
     // Class
     router.get("/class/:id", getClass);

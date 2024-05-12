@@ -10,6 +10,15 @@ const checkCardId = async (data) => {
     }
     return false;
 };
+const checkStudySetId = async (data) => {
+    let id = await db.StudySet.findOne({
+        where: { id: data },
+    });
+    if (id) {
+        return true;
+    }
+    return false;
+};
 const getAllCard = async () => {
     // test relationships
     // let newgroup = await db.Card.findOne({
@@ -73,29 +82,20 @@ const createNewCard = async (rawData) => {
 };
 const updateCardById = async (rawData) => {
     try {
-        let isCardId = checkCardId(rawData.id);
-        if (isCardId === true) {
-            await db.Card.update(
-                {
-                    term: rawData.term,
-                    definition: rawData.definition,
-                },
-                {
-                    where: { id: rawData.id },
-                }
-            );
-            return {
-                EC: 0,
-                EM: "Card updated success",
-                DT: "",
-            };
-        } else {
-            return {
-                EC: 1,
-                EM: "CardId does not exist",
-                DT: "",
-            };
-        }
+        await db.Card.update(
+            {
+                term: rawData.term,
+                definition: rawData.definition,
+            },
+            {
+                where: { id: rawData.id },
+            }
+        );
+        return {
+            EC: 0,
+            EM: "Card updated success",
+            DT: "",
+        };
     } catch (err) {
         console.log(err);
         return {
@@ -108,16 +108,50 @@ const updateCardById = async (rawData) => {
 
 const deleteCardById = async (id) => {
     try {
-        await db.Card.destroy({
-            where: {
-                id: id,
-            },
-        });
+        let isCardId = checkCardId(id);
+        if (isCardId) {
+            let data = await db.Card.destroy({
+                where: { id: id },
+            });
+            return {
+                EC: 0,
+                EM: "Deleted Card",
+                DT: "",
+            };
+        } else {
+            return {
+                EC: 1,
+                EM: "Card doesn't already exist",
+                DT: "",
+            };
+        }
+    } catch (err) {
         return {
-            EC: 0,
-            EM: "Deleted",
+            EC: -1,
+            EM: "Something wrongs in service... ",
             DT: "",
         };
+    }
+};
+const deleteCardByStudySetId = async (id) => {
+    try {
+        let isId = checkStudySetId(id);
+        if (isId) {
+            let data = await db.Card.destroy({
+                where: { studySetId: id },
+            });
+            return {
+                EC: 0,
+                EM: "Deleted Card",
+                DT: "",
+            };
+        } else {
+            return {
+                EC: 0,
+                EM: "StudySetId doesn't already exist",
+                DT: "",
+            };
+        }
     } catch (err) {
         return {
             EC: -1,
@@ -132,4 +166,5 @@ module.exports = {
     createNewCard,
     updateCardById,
     deleteCardById,
+    deleteCardByStudySetId,
 };

@@ -5,7 +5,7 @@ const {
     updateStudySetById,
     deleteStudySetById,
 } = require("../services/studySetService");
-const { createNewCard, updateCardById, deleteCardById } = require("../services/cardService");
+const { createNewCard, updateCardById, deleteCardById, deleteCardByStudySetId } = require("../services/cardService");
 const createStudySet = async (req, res) => {
     try {
         if (!req.body.studySetName || !req.body.userId) {
@@ -102,14 +102,18 @@ const deleteStudySet = async (req, res) => {
                 DT: "",
             });
         } else {
-            let data = await deleteStudySetById(req.params.id);
-            return res.status(200).json({
-                EC: data.EC,
-                EM: data.EM,
-                DT: data.DT,
-            });
+            let data1 = await deleteCardByStudySetId(req.params.id);
+            if (data1 && data1.EC === 0) {
+                let data = await deleteStudySetById(req.params.id);
+                return res.status(200).json({
+                    EC: data.EC,
+                    EM: data.EM,
+                    DT: data.DT,
+                });
+            }
         }
     } catch (err) {
+        console.log(err);
         res.status(500).json({
             EC: -1,
             EM: "error from server",
