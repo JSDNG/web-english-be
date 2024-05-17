@@ -45,7 +45,7 @@ const initAPIRoutes = (app) => {
 
     // Card
     //router.get("/card", getCard);
-    router.post("/card", createCard);
+    //router.post("/card", createCard);
     //router.get("/card", getAllCards);
     //router.put("/card", updateCard);
     //router.delete("/card/:id", deleteCard);
@@ -59,7 +59,7 @@ const initAPIRoutes = (app) => {
 
     // FolderDetail
     router.post("/folderdetail", createFolderDetail);
-    router.delete("/folderdetail/:id", deleteFolderDetail);
+    //router.delete("/folderdetail/:id", deleteFolderDetail);
 
     // Folder
     router.get("/folder", getAllFolders);
@@ -80,7 +80,7 @@ const initAPIRoutes = (app) => {
 
     // Member
     router.post("/member", createMember);
-    router.delete("/member/:id", deleteMember);
+    //router.delete("/member/:id", deleteMember);
 
     // Role
     //router.get("/role/info/:id", getRole);

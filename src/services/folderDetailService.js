@@ -18,16 +18,16 @@ const createNewFolderDetail = async (rawData) => {
         };
     }
 };
-const deleteFolderDetailById = async (id) => {
+const deleteFolderDetailByStudySetId = async (id) => {
     try {
         await db.FolderDetail.destroy({
             where: {
-                id: id,
+                studySetId: id,
             },
         });
         return {
             EC: 0,
-            EM: "OK",
+            EM: "FolderDetail deleted successfully",
             DT: "",
         };
     } catch (err) {
@@ -38,8 +38,28 @@ const deleteFolderDetailById = async (id) => {
         };
     }
 };
-
+const deleteFolderDetailByFolderId = async (id) => {
+    try {
+        await db.FolderDetail.destroy({
+            where: {
+                folderId: id,
+            },
+        });
+        return {
+            EC: 0,
+            EM: "FolderDetail deleted successfully",
+            DT: "",
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Something wrong with the server... ",
+            DT: "",
+        };
+    }
+};
 module.exports = {
     createNewFolderDetail,
-    deleteFolderDetailById,
+    deleteFolderDetailByStudySetId,
+    deleteFolderDetailByFolderId,
 };

@@ -1,31 +1,27 @@
 const db = require("../models");
 
+const checkFolder = async (id) => {
+    let folder = await db.Folder.findOne({
+        where: { id: id },
+    });
+    if (folder) {
+        return true;
+    }
+    return false;
+};
 const createNewFolder = async (rawData) => {
     try {
-        if (rawData.classId) {
-            let data = await db.Folder.create({
-                folderName: rawData.folderName,
-                createDate: Date.now(),
-                userId: rawData.userId,
-                classId: rawData.classId,
-            });
-            return {
-                EC: 0,
-                EM: "Folder created successfully",
-                DT: "",
-            };
-        } else {
-            let data = await db.Folder.create({
-                folderName: rawData.folderName,
-                createDate: Date.now(),
-                userId: rawData.userId,
-            });
-            return {
-                EC: 0,
-                EM: "Folder created successfully",
-                DT: "",
-            };
-        }
+        let data = await db.Folder.create({
+            folderName: rawData.folderName,
+            createDate: Date.now(),
+            userId: rawData.userId,
+            classId: rawData.classId,
+        });
+        return {
+            EC: 0,
+            EM: "Folder created successfully",
+            DT: "",
+        };
     } catch (err) {
         return {
             EC: -1,
@@ -36,8 +32,6 @@ const createNewFolder = async (rawData) => {
 };
 const getAllFolder = async () => {
     try {
-        //let results = await db.Folder.findAll();
-        // let data = results && results.length > 0 ? results : {};
         const data = await db.Folder.findAll({
             attributes: [
                 "id",
@@ -53,7 +47,13 @@ const getAllFolder = async () => {
             nest: true,
             group: ["Folder.id"],
         });
-
+        if (!data.length > 0) {
+            return {
+                EC: 0,
+                EM: "Get all Folder",
+                DT: "",
+            };
+        }
         // Sắp xếp data theo createDate giảm dần
         data.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
         for (let j = 0; j < data.length; j++) {
@@ -78,6 +78,14 @@ const getAllFolder = async () => {
 
 const getFolderById = async (id) => {
     try {
+        let isFolder = await checkFolder(id);
+        if (!isFolder) {
+            return {
+                EC: 1,
+                EM: "Folder doesn't already exist",
+                DT: "",
+            };
+        }
         let data = await db.Folder.findOne({
             where: { id: id },
             include: { model: db.StudySet, attributes: ["id", "studySetName", "userId"], through: { attributes: [] } },
@@ -104,6 +112,14 @@ const getFolderById = async (id) => {
 
 const updateFolderById = async (rawData) => {
     try {
+        let isFolder = await checkFolder(id);
+        if (!isFolder) {
+            return {
+                EC: 1,
+                EM: "Folder doesn't already exist",
+                DT: "",
+            };
+        }
         await db.Folder.update(
             {
                 folderName: rawData.folderName,
@@ -129,6 +145,14 @@ const updateFolderById = async (rawData) => {
 
 const deleteFolderById = async (id) => {
     try {
+        let isFolder = await checkFolder(id);
+        if (!isFolder) {
+            return {
+                EC: 1,
+                EM: "Folder doesn't already exist",
+                DT: "",
+            };
+        }
         await db.Folder.destroy({
             where: {
                 id: id,

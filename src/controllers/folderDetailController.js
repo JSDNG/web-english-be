@@ -1,4 +1,4 @@
-const { createNewFolderDetail, deleteFolderDetailById } = require("../services/folderDetailService");
+const { createNewFolderDetail } = require("../services/folderDetailService");
 
 const createFolderDetail = async (req, res) => {
     try {
@@ -30,7 +30,7 @@ const deleteFolderDetail = async (req, res) => {
             EM: "missing required params",
         });
     } else {
-        let data = await deleteFolderDetailById(req.body.id);
+        //let data = await deleteFolderDetailById(req.body.id);
         return res.status(200).json({
             EC: data.EC,
             EM: data.EM,

@@ -5,7 +5,7 @@ const {
     updateClassById,
     deleteClassById,
 } = require("../services/classService");
-
+const { deleteMemberByClassId } = require("../services/memberService");
 const createClass = async (req, res) => {
     try {
         if (!req.body.className || !req.body.description || !req.body.userId) {
@@ -84,12 +84,15 @@ const deleteClass = async (req, res) => {
                 DT: "",
             });
         } else {
-            let data = await deleteClassById(id);
-            return res.status(200).json({
-                EC: data.EC,
-                EM: data.EM,
-                DT: data.DT,
-            });
+            let data1 = await deleteMemberByClassId(id);
+            if (data1 && data1.EC === 0) {
+                let data = await deleteClassById(id);
+                return res.status(200).json({
+                    EC: data.EC,
+                    EM: data.EM,
+                    DT: data.DT,
+                });
+            }
         }
     } catch (err) {
         res.status(500).json({

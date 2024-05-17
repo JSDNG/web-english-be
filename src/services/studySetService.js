@@ -61,29 +61,28 @@ const getAllStudySet = async () => {
 
 const getStudySetById = async (id) => {
     try {
-        let isId = checkStudySetId(id);
-        if (isId) {
-            let data = await db.StudySet.findOne({
-                where: { id: id },
-                include: { model: db.Card, attributes: ["id", "term", "definition"] },
-                attributes: ["id", "studySetName", "userId"],
-            });
-            //let data = results && results.length > 0 ? results : {};
-
-            let userInfo = await db.User.findByPk(data.userId, { attributes: ["id", "username", "image"] });
-            data.userId = userInfo.get({ plain: true });
-            return {
-                EC: 0,
-                EM: "Get one study set",
-                DT: data.get({ plain: true }),
-            };
-        } else {
+        let isSet = await checkStudySetId(id);
+        if (!isSet) {
             return {
                 EC: 1,
                 EM: "Study Set doesn't already exist",
                 DT: "",
             };
         }
+        let data = await db.StudySet.findOne({
+            where: { id: id },
+            include: { model: db.Card, attributes: ["id", "term", "definition"] },
+            attributes: ["id", "studySetName", "userId"],
+        });
+        //let data = results && results.length > 0 ? results : {};
+
+        let userInfo = await db.User.findByPk(data.userId, { attributes: ["id", "username", "image"] });
+        data.userId = userInfo.get({ plain: true });
+        return {
+            EC: 0,
+            EM: "Get one study set",
+            DT: data.get({ plain: true }),
+        };
     } catch (err) {
         return {
             EC: -1,
@@ -115,28 +114,27 @@ const createNewStudySet = async (rawData) => {
 };
 const updateStudySetById = async (rawData) => {
     try {
-        let isId = checkStudySetId(rawData.id);
-        if (isId) {
-            let data = await db.StudySet.update(
-                {
-                    studySetName: rawData.studySetName,
-                },
-                {
-                    where: { id: rawData.id },
-                }
-            );
-            return {
-                EC: 0,
-                EM: "Updated Study Set",
-                DT: "",
-            };
-        } else {
+        let isSet = await checkStudySetId(rawData.id);
+        if (!isSet) {
             return {
                 EC: 1,
                 EM: "Study Set doesn't already exist",
                 DT: "",
             };
         }
+        let data = await db.StudySet.update(
+            {
+                studySetName: rawData.studySetName,
+            },
+            {
+                where: { id: rawData.id },
+            }
+        );
+        return {
+            EC: 0,
+            EM: "Updated Study Set",
+            DT: "",
+        };
     } catch (err) {
         return {
             EC: -1,
@@ -148,25 +146,24 @@ const updateStudySetById = async (rawData) => {
 
 const deleteStudySetById = async (id) => {
     try {
-        let isId = checkStudySetId(id);
-        if (isId) {
-            let data = await db.StudySet.destroy({
-                where: {
-                    id: id,
-                },
-            });
-            return {
-                EC: 0,
-                EM: "Deleted Study Set",
-                DT: "",
-            };
-        } else {
+        let isSet = await checkStudySetId(id);
+        if (!isSet) {
             return {
                 EC: 1,
                 EM: "Study Set doesn't already exist",
                 DT: "",
             };
         }
+        let data = await db.StudySet.destroy({
+            where: {
+                id: id,
+            },
+        });
+        return {
+            EC: 0,
+            EM: "Deleted Study Set",
+            DT: "",
+        };
     } catch (err) {
         return {
             EC: -1,

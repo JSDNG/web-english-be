@@ -13,16 +13,16 @@ const createNewMember = async (rawData) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
         };
     }
 };
 
-const deleteMemberById = async (id) => {
+const deleteMemberByClassId = async (id) => {
     try {
         await db.Member.destroy({
             where: {
-                id: id,
+                classId: id,
             },
         });
         return {
@@ -33,7 +33,28 @@ const deleteMemberById = async (id) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrongs in service... ",
+            DT: "",
+        };
+    }
+};
+
+const deleteMemberByUserId = async (id) => {
+    try {
+        await db.Member.destroy({
+            where: {
+                userId: id,
+            },
+        });
+        return {
+            EC: 0,
+            EM: "Deleted",
+            DT: "",
+        };
+    } catch (err) {
+        return {
+            EC: -1,
+            EM: "Something wrongs in service... ",
             DT: "",
         };
     }
@@ -41,5 +62,6 @@ const deleteMemberById = async (id) => {
 
 module.exports = {
     createNewMember,
-    deleteMemberById,
+    deleteMemberByClassId,
+    deleteMemberByUserId,
 };

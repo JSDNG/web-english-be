@@ -6,6 +6,7 @@ const {
     deleteStudySetById,
 } = require("../services/studySetService");
 const { createNewCard, updateCardById, deleteCardById, deleteCardByStudySetId } = require("../services/cardService");
+const { deleteFolderDetailByStudySetId } = require("../services/folderDetailService");
 const createStudySet = async (req, res) => {
     try {
         if (!req.body.studySetName || !req.body.userId) {
@@ -102,6 +103,7 @@ const deleteStudySet = async (req, res) => {
                 DT: "",
             });
         } else {
+            let data = await deleteFolderDetailByStudySetId(req.params.id);
             let data1 = await deleteCardByStudySetId(req.params.id);
             if (data1 && data1.EC === 0) {
                 let data = await deleteStudySetById(req.params.id);

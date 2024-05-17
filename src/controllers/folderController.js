@@ -5,10 +5,10 @@ const {
     updateFolderById,
     deleteFolderById,
 } = require("../services/folderService");
-
+const { deleteFolderDetailByFolderId } = require("../services/folderDetailService");
 const createFolder = async (req, res) => {
     try {
-        if (!req.body.folderName || !req.body.userId) {
+        if (!req.body.folderName || !req.body.userId || !req.body.classId) {
             return res.status(200).json({
                 EC: 1,
                 EM: "Missing required parameters",
@@ -19,7 +19,7 @@ const createFolder = async (req, res) => {
         return res.status(200).json({
             EC: data.EC,
             EM: data.EM,
-            DT: "",
+            DT: data.DT,
         });
     } catch (err) {
         res.status(500).json({
@@ -82,6 +82,7 @@ const deleteFolder = async (req, res) => {
                 DT: "",
             });
         } else {
+            let data1 = await deleteFolderDetailByFolderId(id);
             let data = await deleteFolderById(id);
             return res.status(200).json({
                 EC: data.EC,

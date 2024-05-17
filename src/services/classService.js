@@ -10,6 +10,16 @@ const checkClassName = async (className) => {
     }
     return false;
 };
+const checkClassId = async (id) => {
+    let check = await db.Class.findOne({
+        where: { id: id },
+    });
+
+    if (check) {
+        return true;
+    }
+    return false;
+};
 const createNewClass = async (rawData) => {
     try {
         let isClass = await checkClassName(rawData.className);
@@ -57,7 +67,14 @@ const getAllClass = async () => {
             nest: true,
             group: ["Class.id"],
         });
-        // Sắp xếp data theo createDate giảm dần
+
+        if (!data.length > 0) {
+            return {
+                EC: 0,
+                EM: " All class",
+                DT: "",
+            };
+        }
         data.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
         for (let j = 0; j < data.length; j++) {
             const temp = data[j];
@@ -81,6 +98,14 @@ const getAllClass = async () => {
 
 const getClassById = async (id) => {
     try {
+        let isClassId = await checkClassId(id);
+        if (!isClassId) {
+            return {
+                EC: 1,
+                EM: "Class doesn't already exist",
+                DT: "",
+            };
+        }
         let data = await db.Class.findOne({
             where: { id: id },
             attributes: ["id", "className", "createDate", "description", "userId"],
@@ -106,6 +131,14 @@ const getClassById = async (id) => {
 
 const updateClassById = async (rawData) => {
     try {
+        let isClassId = await checkClassId(rawData.id);
+        if (!isClassId) {
+            return {
+                EC: 1,
+                EM: "Class doesn't already exist",
+                DT: "",
+            };
+        }
         let isClass = checkClassName(rawData.checkClassName);
         if (isClass) {
             return {
@@ -140,6 +173,15 @@ const updateClassById = async (rawData) => {
 
 const deleteClassById = async (id) => {
     try {
+        let isClassId = await checkClassId(rawData.id);
+        if (!isClassId) {
+            return {
+                EC: 1,
+                EM: "Class doesn't already exist",
+                DT: "",
+            };
+        }
+
         let data = await db.Class.destroy({
             where: {
                 id: id,
