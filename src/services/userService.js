@@ -86,14 +86,17 @@ const getUserById = async (id) => {
                 DT: "",
             };
         }
-        let data = await db.User.findByPk(id);
-        // let data1 = data.get({ plain: true });
-        // const base64String = data1.image.toString("base64");
-        // console.log(base64String);
+        let data = await db.User.findByPk(id, { attributes: ["id", "username", "image"] });
+        let data1 = data.get({ plain: true });
+
+        // Chuyển đổi hình ảnh từ BLOB sang Base64
+        const imageBuffer = data1.image; // Giả sử hình ảnh được lưu trong trường "image" của bản ghi
+        const base64Image = Buffer.from(imageBuffer, "binary").toString("base64");
+        data1.image = base64Image;
         return {
             EC: 0,
             EM: "get data success",
-            DT: data.get({ plain: true }),
+            DT: data1,
         };
     } catch (err) {
         console.log(err);
@@ -168,7 +171,7 @@ const getUsersByPage = async (page, limit) => {
         const { count, rows } = await db.User.findAndCountAll({
             offset: offset,
             limit: limit,
-            attributes: ["id", "username", "image"],
+            attributes: ["id", "username"],
             include: [
                 { model: db.Group, attributes: ["name", "description"] },
                 { model: db.Account, attributes: ["email"] },

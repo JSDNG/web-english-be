@@ -1,5 +1,6 @@
 const {
     getAllClass,
+    getClassByPage,
     getClassById,
     createNewClass,
     updateClassById,
@@ -33,13 +34,23 @@ const createClass = async (req, res) => {
 
 const getAllClasses = async (req, res) => {
     try {
-        let data = await getAllClass();
-
-        return res.status(200).json({
-            EC: data.EC,
-            EM: data.EM,
-            DT: data.DT,
-        });
+        if (req.query.page && req.query.limit) {
+            let page = req.query.page;
+            let limit = req.query.limit;
+            let data = await getClassByPage(+page, +limit);
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        } else {
+            let data = await getAllClass();
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
     } catch (err) {
         res.status(500).json({
             EC: -1,

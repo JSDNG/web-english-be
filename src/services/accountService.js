@@ -95,6 +95,9 @@ const loginAccount = async (rawData) => {
                 dataRoles,
             };
             let token = createJWT(payload);
+            const imageBuffer = user.image; // Giả sử hình ảnh được lưu trong trường "image" của bản ghi
+            const base64Image = Buffer.from(imageBuffer, "binary").toString("base64");
+            user.image = base64Image;
             if (isPassword === true) {
                 return {
                     EC: 0,

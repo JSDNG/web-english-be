@@ -32,7 +32,7 @@ const createNewFolder = async (rawData) => {
 };
 const getAllFolder = async () => {
     try {
-        const data = await db.Folder.findAll({
+        const { rows: data } = await db.Folder.findAndCountAll({
             attributes: [
                 "id",
                 "folderName",
@@ -47,6 +47,7 @@ const getAllFolder = async () => {
             nest: true,
             group: ["Folder.id"],
         });
+        console.log(data);
         if (!data.length > 0) {
             return {
                 EC: 0,
@@ -60,6 +61,16 @@ const getAllFolder = async () => {
             const folder = data[j];
             let userInfo = await db.User.findByPk(folder.userId, { attributes: ["id", "username", "image"] });
             folder.userId = userInfo.get({ plain: true });
+        }
+        for (let j = 0; j < data.length; j++) {
+            const temp = data[j];
+
+            // Chuyển đổi hình ảnh từ BLOB sang Base64
+            const imageBuffer = temp.userId.image; // Giả sử hình ảnh được lưu trong trường "image" của bản ghi
+            const base64Image = Buffer.from(imageBuffer, "binary").toString("base64");
+
+            // Gán chuỗi Base64 vào trường "image" của bản ghi
+            temp.userId.image = base64Image;
         }
         return {
             EC: 0,
@@ -75,7 +86,82 @@ const getAllFolder = async () => {
         };
     }
 };
+const getFolderByPage = async (page, limit) => {
+    try {
+        let offset = (page - 1) * limit;
+        const { count, rows } = await db.Folder.findAndCountAll({
+            offset: offset,
+            limit: limit,
+            attributes: [
+                "id",
+                "folderName",
+                "createDate",
+                "userId",
+                "classId",
+                [
+                    db.sequelize.literal("(SELECT COUNT(*) FROM FolderDetail WHERE folderId = Folder.id)"),
+                    "studySetCount",
+                ],
+            ],
+            include: { model: db.StudySet, attributes: [], through: { attributes: [] } },
 
+            raw: true,
+            nest: true,
+            group: ["Folder.id"],
+        });
+        console.log(rows);
+        if (!rows.length > 0) {
+            return {
+                EC: 0,
+                EM: "Get all Folder",
+                DT: "",
+            };
+        }
+        let uniqueArray = [];
+
+        rows.forEach((obj) => {
+            if (!uniqueArray.some((item) => item.id === obj.id)) {
+                uniqueArray.push(obj);
+            }
+        });
+        let totalPages = Math.ceil(count.length / limit);
+        let results = {
+            totalRows: count.length,
+            totalPages: totalPages,
+            data: uniqueArray,
+        };
+
+        // Sắp xếp data theo createDate giảm dần
+        results.data.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+        for (let j = 0; j < results.data.length; j++) {
+            const folder = results.data[j];
+            let userInfo = await db.User.findByPk(folder.userId, { attributes: ["id", "username", "image"] });
+            folder.userId = userInfo.get({ plain: true });
+        }
+        for (let j = 0; j < results.data.length; j++) {
+            const temp = results.data[j];
+
+            // Chuyển đổi hình ảnh từ BLOB sang Base64
+            const imageBuffer = temp.userId.image; // Giả sử hình ảnh được lưu trong trường "image" của bản ghi
+            const base64Image = Buffer.from(imageBuffer, "binary").toString("base64");
+
+            // Gán chuỗi Base64 vào trường "image" của bản ghi
+            temp.userId.image = base64Image;
+        }
+        return {
+            EC: 0,
+            EM: "Get all Folder",
+            DT: results,
+        };
+    } catch (err) {
+        console.log(err);
+        return {
+            EC: -1,
+            EM: "Something wrong with the server... ",
+            DT: "",
+        };
+    }
+};
 const getFolderById = async (id) => {
     try {
         let isFolder = await checkFolder(id);
@@ -95,6 +181,11 @@ const getFolderById = async (id) => {
 
         let userInfo = await db.User.findByPk(data.userId, { attributes: ["id", "username", "image"] });
         data.userId = userInfo.get({ plain: true });
+
+        // Chuyển đổi hình ảnh từ BLOB sang Base64
+        const imageBuffer = data.userId.image; // Giả sử hình ảnh được lưu trong trường "image" của bản ghi
+        const base64Image = Buffer.from(imageBuffer, "binary").toString("base64");
+        data.userId.image = base64Image;
         return {
             EC: 0,
             EM: "Get one Folder",
@@ -173,6 +264,7 @@ const deleteFolderById = async (id) => {
 };
 module.exports = {
     getAllFolder,
+    getFolderByPage,
     getFolderById,
     createNewFolder,
     updateFolderById,

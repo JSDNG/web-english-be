@@ -1,5 +1,6 @@
 const {
     getAllStudySet,
+    getSetsByPage,
     getStudySetById,
     createNewStudySet,
     updateStudySetById,
@@ -42,12 +43,24 @@ const createStudySet = async (req, res) => {
 
 const getAllStudySets = async (req, res) => {
     try {
-        let data = await getAllStudySet();
-        return res.status(200).json({
-            EC: data.EC,
-            EM: data.EM,
-            DT: data.DT,
-        });
+        console.log(req.params.page);
+        if (req.query.page && req.query.limit) {
+            let page = req.query.page;
+            let limit = req.query.limit;
+            let data = await getSetsByPage(+page, +limit);
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        } else {
+            let data = await getAllStudySet();
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
     } catch (err) {
         res.status(500).json({
             EC: -1,

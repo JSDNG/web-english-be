@@ -81,6 +81,16 @@ const getAllClass = async () => {
             let userInfo = await db.User.findByPk(temp.userId, { attributes: ["id", "username", "image"] });
             temp.userId = userInfo.get({ plain: true });
         }
+        for (let j = 0; j < data.length; j++) {
+            const temp = data[j];
+
+            // Chuyển đổi hình ảnh từ BLOB sang Base64
+            const imageBuffer = temp.userId.image; // Giả sử hình ảnh được lưu trong trường "image" của bản ghi
+            const base64Image = Buffer.from(imageBuffer, "binary").toString("base64");
+
+            // Gán chuỗi Base64 vào trường "image" của bản ghi
+            temp.userId.image = base64Image;
+        }
         return {
             EC: 0,
             EM: " All class",
@@ -96,6 +106,78 @@ const getAllClass = async () => {
     }
 };
 
+const getClassByPage = async (page, limit) => {
+    try {
+        // Relationships
+        let offset = (page - 1) * limit;
+        let { count, rows } = await db.Class.findAndCountAll({
+            offset: offset,
+            limit: limit,
+            attributes: [
+                "id",
+                "className",
+                "createDate",
+                "description",
+                "userId",
+                // [db.sequelize.fn("COUNT", db.sequelize.col("Users.id")), "member"],
+                [db.sequelize.literal("(SELECT COUNT(*) FROM Member WHERE classId = Class.id)"), "member"],
+            ],
+            include: { model: db.User, attributes: [], through: { attributes: [] } },
+            raw: true,
+            nest: true,
+            group: ["Class.id"],
+        });
+
+        if (!rows.length > 0) {
+            return {
+                EC: 0,
+                EM: " All class",
+                DT: "",
+            };
+        }
+        let uniqueArray = [];
+
+        rows.forEach((obj) => {
+            if (!uniqueArray.some((item) => item.id === obj.id)) {
+                uniqueArray.push(obj);
+            }
+        });
+        let totalPages = Math.ceil(count.length / limit);
+        let results = {
+            totalRows: count.length,
+            totalPages: totalPages,
+            data: uniqueArray,
+        };
+        results.data.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+        for (let j = 0; j < results.data.length; j++) {
+            const temp = results.data[j];
+            let userInfo = await db.User.findByPk(temp.userId, { attributes: ["id", "username", "image"] });
+            temp.userId = userInfo.get({ plain: true });
+        }
+        for (let j = 0; j < results.data.length; j++) {
+            const temp = results.data[j];
+
+            // Chuyển đổi hình ảnh từ BLOB sang Base64
+            const imageBuffer = temp.userId.image; // Giả sử hình ảnh được lưu trong trường "image" của bản ghi
+            const base64Image = Buffer.from(imageBuffer, "binary").toString("base64");
+
+            // Gán chuỗi Base64 vào trường "image" của bản ghi
+            temp.userId.image = base64Image;
+        }
+        return {
+            EC: 0,
+            EM: " All class",
+            DT: results,
+        };
+    } catch (err) {
+        console.log(err);
+        return {
+            EC: -1,
+            EM: "Something wrong with the server... ",
+            DT: "",
+        };
+    }
+};
 const getClassById = async (id) => {
     try {
         let isClassId = await checkClassId(id);
@@ -110,11 +192,16 @@ const getClassById = async (id) => {
             where: { id: id },
             attributes: ["id", "className", "createDate", "description", "userId"],
             include: { model: db.Folder, attributes: ["id", "folderName", "userId", "classId"] },
-            include: { model: db.User, attributes: ["id", "username", "image"], through: { attributes: [] } },
+            //include: { model: db.User, attributes: ["id", "username", "image"], through: { attributes: [] } },
         });
 
         let userInfo = await db.User.findByPk(data.userId, { attributes: ["id", "username", "image"] });
         data.userId = userInfo.get({ plain: true });
+
+        // Chuyển đổi hình ảnh từ BLOB sang Base64
+        const imageBuffer = data.userId.image; // Giả sử hình ảnh được lưu trong trường "image" của bản ghi
+        const base64Image = Buffer.from(imageBuffer, "binary").toString("base64");
+        data.userId.image = base64Image;
         return {
             EC: 0,
             EM: "Get one class",
@@ -202,6 +289,7 @@ const deleteClassById = async (id) => {
 };
 module.exports = {
     getAllClass,
+    getClassByPage,
     getClassById,
     createNewClass,
     updateClassById,

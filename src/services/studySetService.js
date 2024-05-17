@@ -44,6 +44,16 @@ const getAllStudySet = async () => {
             let userInfo = await db.User.findByPk(studySet.userId, { attributes: ["id", "username", "image"] });
             studySet.userId = userInfo.get({ plain: true });
         }
+        for (let j = 0; j < data.length; j++) {
+            const temp = data[j];
+
+            // Chuyển đổi hình ảnh từ BLOB sang Base64
+            const imageBuffer = temp.userId.image; // Giả sử hình ảnh được lưu trong trường "image" của bản ghi
+            const base64Image = Buffer.from(imageBuffer, "binary").toString("base64");
+
+            // Gán chuỗi Base64 vào trường "image" của bản ghi
+            temp.userId.image = base64Image;
+        }
         return {
             EC: 0,
             EM: "Get All Study Sets",
@@ -58,7 +68,82 @@ const getAllStudySet = async () => {
         };
     }
 };
+const getSetsByPage = async (page, limit) => {
+    try {
+        let offset = (page - 1) * limit;
+        const { count, rows } = await db.StudySet.findAndCountAll({
+            offset: offset,
+            limit: limit,
+            attributes: [
+                "id",
+                "studySetName",
+                "createDate",
+                "userId",
+                //[db.sequelize.fn("COUNT", db.sequelize.col("Cards.id")), "cards"],
+                [db.sequelize.literal("(SELECT COUNT(*) FROM Card WHERE studySetId = StudySet.id)"), "cards"],
+            ],
+            include: { model: db.Card, attributes: [] },
 
+            raw: true,
+            nest: true,
+            group: ["StudySet.id"],
+        });
+        if (!rows.length > 0) {
+            return {
+                EC: 0,
+                EM: "Get All Study Sets",
+                DT: "",
+            };
+        }
+        let uniqueArray = [];
+
+        rows.forEach((obj) => {
+            if (!uniqueArray.some((item) => item.id === obj.id)) {
+                uniqueArray.push(obj);
+            }
+        });
+        let totalPages = Math.ceil(count.length / limit);
+        let results = {
+            totalRows: count.length,
+            totalPages: totalPages,
+            data: uniqueArray,
+        };
+        results.data.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+        // // Đếm tổng số card trong mỗi study set và cập nhật rows
+        // for (let i = 0; i < data.length; i++) {
+        //     const studySet = data[i];
+        //     const cardCount = await db.Card.count({ where: { studySetId: studySet.id } });
+        //     studySet.cardCount = cardCount; // Thêm thuộc tính cardCount vào mỗi study set
+        // }
+        for (let j = 0; j < results.data.length; j++) {
+            const studySet = results.data[j];
+            let userInfo = await db.User.findByPk(studySet.userId, { attributes: ["id", "username", "image"] });
+            studySet.userId = userInfo.get({ plain: true });
+        }
+        for (let j = 0; j < results.data.length; j++) {
+            const temp = results.data[j];
+
+            // Chuyển đổi hình ảnh từ BLOB sang Base64
+            const imageBuffer = temp.userId.image; // Giả sử hình ảnh được lưu trong trường "image" của bản ghi
+            const base64Image = Buffer.from(imageBuffer, "binary").toString("base64");
+
+            // Gán chuỗi Base64 vào trường "image" của bản ghi
+            temp.userId.image = base64Image;
+        }
+        return {
+            EC: 0,
+            EM: "Get All Study Sets",
+            DT: results,
+        };
+    } catch (err) {
+        console.log(err);
+        return {
+            EC: -1,
+            EM: "Somthing wrongs in service... ",
+            DT: "",
+        };
+    }
+};
 const getStudySetById = async (id) => {
     try {
         let isSet = await checkStudySetId(id);
@@ -174,6 +259,7 @@ const deleteStudySetById = async (id) => {
 };
 module.exports = {
     getAllStudySet,
+    getSetsByPage,
     getStudySetById,
     createNewStudySet,
     updateStudySetById,
