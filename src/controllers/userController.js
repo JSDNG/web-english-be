@@ -43,9 +43,9 @@ const getUser = async (req, res) => {
             });
         }
     } catch (e) {
-        return res.status(500).json({
-            EC: 1,
-            EM: "err",
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
             DT: "",
         });
     }
@@ -71,9 +71,9 @@ const getUsers = async (req, res) => {
             });
         }
     } catch (e) {
-        return res.status(500).json({
-            EC: 1,
-            EM: "err",
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
             DT: "",
         });
     }

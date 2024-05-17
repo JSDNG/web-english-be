@@ -23,17 +23,25 @@ const createMember = async (req, res) => {
 };
 
 const deleteMember = async (req, res) => {
-    if (!req.body.id) {
-        return res.status(200).json({
-            EC: 1,
-            EM: "missing required params",
-        });
-    } else {
-        //let data = await deleteMemberById(req.body.id);
-        return res.status(200).json({
-            EC: data.EC,
-            EM: data.EM,
-            DT: data.DT,
+    try {
+        if (!req.body.id) {
+            return res.status(200).json({
+                EC: 1,
+                EM: "missing required params",
+            });
+        } else {
+            //let data = await deleteMemberById(req.body.id);
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
         });
     }
 };
