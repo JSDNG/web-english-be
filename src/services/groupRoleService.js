@@ -14,7 +14,7 @@ const createNewGroupRole = async (groupId, roleId) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrong with the server... ",
             DT: "",
         };
     }
@@ -34,7 +34,7 @@ const deleteGroupRoleById = async (id) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrong with the server... ",
             DT: "",
         };
     }

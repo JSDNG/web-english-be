@@ -47,7 +47,7 @@ const getAllFolder = async () => {
             nest: true,
             group: ["Folder.id"],
         });
-        console.log(data);
+
         if (!data.length > 0) {
             return {
                 EC: 0,
@@ -109,7 +109,7 @@ const getFolderByPage = async (page, limit) => {
             nest: true,
             group: ["Folder.id"],
         });
-        console.log(rows);
+
         if (!rows.length > 0) {
             return {
                 EC: 0,

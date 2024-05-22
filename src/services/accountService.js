@@ -107,6 +107,7 @@ const loginAccount = async (rawData) => {
                         refresh_token: "refresh_token",
                         email: account.email,
                         username: user.username,
+                        userId: user.id,
                         image: user.image,
                         dataRoles,
                     },

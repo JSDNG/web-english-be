@@ -163,6 +163,11 @@ const getStudySetById = async (id) => {
 
         let userInfo = await db.User.findByPk(data.userId, { attributes: ["id", "username", "image"] });
         data.userId = userInfo.get({ plain: true });
+
+        // Chuyển đổi hình ảnh từ BLOB sang Base64
+        const imageBuffer = data.userId.image; // Giả sử hình ảnh được lưu trong trường "image" của bản ghi
+        const base64Image = Buffer.from(imageBuffer, "binary").toString("base64");
+        data.userId.image = base64Image;
         return {
             EC: 0,
             EM: "Get one study set",

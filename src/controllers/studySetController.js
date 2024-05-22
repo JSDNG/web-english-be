@@ -20,7 +20,7 @@ const createStudySet = async (req, res) => {
             let data = await createNewStudySet(req.body);
             let studySetId = data.DT && data.DT.toString();
             if (studySetId) {
-                const cards = req.body.card.map((item, index) => ({
+                const cards = req.body.cards.map((item, index) => ({
                     ...item,
                     studySetId: studySetId,
                 }));

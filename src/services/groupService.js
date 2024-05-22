@@ -26,7 +26,7 @@ const createNewGroup = async (rawData) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrong with the server... ",
             DT: "",
         };
     }
@@ -50,7 +50,7 @@ const updateGroupById = async (rawData) => {
     } catch (err) {
         return {
             EC: -1,
-            EM: "Somthin wrongs in service... ",
+            EM: "Something wrong with the server... ",
             DT: "",
         };
     }

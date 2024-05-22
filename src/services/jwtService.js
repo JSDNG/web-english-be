@@ -13,7 +13,7 @@ const getGroupWithRoles = async (user) => {
         });
         return roles ? roles : {};
     } catch (err) {
-        return "Somthin wrongs in service... ";
+        return "Something wrong with the server... ";
     }
 };
 module.exports = getGroupWithRoles;

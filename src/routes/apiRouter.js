@@ -80,7 +80,7 @@ const initAPIRoutes = (app) => {
 
     // Member
     router.post("/member", createMember);
-    //router.delete("/member/:id", deleteMember);
+    router.delete("/member/:id", deleteMember);
 
     // Role
     //router.get("/role/info/:id", getRole);
