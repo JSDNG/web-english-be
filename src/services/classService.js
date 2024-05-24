@@ -62,7 +62,7 @@ const getAllClass = async () => {
                 "userId",
                 [db.sequelize.fn("COUNT", db.sequelize.col("Users.id")), "member"],
             ],
-            include: { model: db.User, attributes: [], through: { attributes: [] } },
+            include: [{ model: db.User, attributes: [], through: { attributes: [] } }],
             raw: true,
             nest: true,
             group: ["Class.id"],
@@ -75,6 +75,7 @@ const getAllClass = async () => {
                 DT: "",
             };
         }
+
         data.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
         for (let j = 0; j < data.length; j++) {
             const temp = data[j];

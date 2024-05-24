@@ -203,7 +203,7 @@ const getFolderById = async (id) => {
 
 const updateFolderById = async (rawData) => {
     try {
-        let isFolder = await checkFolder(id);
+        let isFolder = await checkFolder(rawData.id);
         if (!isFolder) {
             return {
                 EC: 1,
@@ -226,6 +226,7 @@ const updateFolderById = async (rawData) => {
             DT: "",
         };
     } catch (err) {
+        console.log(err);
         return {
             EC: -1,
             EM: "Something wrong with the server... ",
