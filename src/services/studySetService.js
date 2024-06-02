@@ -226,6 +226,7 @@ const updateStudySetById = async (rawData) => {
             DT: "",
         };
     } catch (err) {
+        console.log(err);
         return {
             EC: -1,
             EM: "Somthing wrongs in service... ",

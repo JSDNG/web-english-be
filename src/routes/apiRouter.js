@@ -9,7 +9,14 @@ const {
 } = require("../controllers/accountController");
 
 const { getAllCards, createCard, getCard, updateCard, deleteCard } = require("../controllers/cardController");
-const { getAllClasses, getClass, updateClass, deleteClass, createClass } = require("../controllers/classController");
+const {
+    getAllClasses,
+    getClass,
+    updateClass,
+    deleteClass,
+    createClass,
+    getAllMember,
+} = require("../controllers/classController");
 const { createFolderDetail, deleteFolderDetail } = require("../controllers/folderDetailController");
 const {
     getAllFolders,
@@ -56,6 +63,7 @@ const initAPIRoutes = (app) => {
     router.post("/class", createClass);
     router.put("/class", updateClass);
     //router.delete("/class/:id", deleteClass);
+    router.get("/class/members/:id", getAllMember);
 
     // FolderDetail
     router.post("/folderdetail", createFolderDetail);

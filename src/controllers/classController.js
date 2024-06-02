@@ -5,6 +5,7 @@ const {
     createNewClass,
     updateClassById,
     deleteClassById,
+    getAllMemberByClass,
 } = require("../services/classService");
 const { deleteMemberByClassId } = require("../services/memberService");
 const createClass = async (req, res) => {
@@ -34,6 +35,7 @@ const createClass = async (req, res) => {
 
 const getAllClasses = async (req, res) => {
     try {
+        console.log(req.params.page);
         if (req.query.page && req.query.limit) {
             let page = req.query.page;
             let limit = req.query.limit;
@@ -139,10 +141,37 @@ const getClass = async (req, res) => {
         });
     }
 };
+const getAllMember = async (req, res) => {
+    try {
+        let id = req.params.id;
+
+        if (!id) {
+            return res.status(200).json({
+                EC: 1,
+                EM: "missing required params",
+                DT: "",
+            });
+        } else {
+            let data = await getAllMemberByClass(id);
+            return res.status(200).json({
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            EC: -1,
+            EM: "error from server",
+            DT: "",
+        });
+    }
+};
 module.exports = {
     getAllClasses,
     createClass,
     getClass,
     updateClass,
     deleteClass,
+    getAllMember,
 };

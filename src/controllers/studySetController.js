@@ -72,6 +72,7 @@ const getAllStudySets = async (req, res) => {
 
 const updateStudySet = async (req, res) => {
     try {
+        console.log(0);
         if (!req.body.studySetName || !req.body.id || !req.body.userId) {
             return res.status(200).json({
                 EC: 1,
@@ -79,18 +80,24 @@ const updateStudySet = async (req, res) => {
                 DT: "",
             });
         } else {
+            console.log(1);
             let data = await updateStudySetById(req.body);
-            const item = req.body.card.map(async (item) => {
-                if (item.status === "0") {
-                    item.studySetId = req.body.id;
-                    delete item.status;
-                    await createNewCard([item]);
-                } else if (item.status === "1") {
-                    await updateCardById(item);
-                } else if (item.status === "2") {
-                    await deleteCardById(item.id);
-                }
-            });
+            if (req.body.cards) {
+                const item = req.body.cards.map(async (item) => {
+                    if (item.status === 0) {
+                        item.studySetId = req.body.id;
+                        delete item.status;
+                        console.log(2);
+                        await createNewCard([item]);
+                    } else if (item.status === 1) {
+                        console.log(3);
+                        await updateCardById(item);
+                    } else if (item.status === 2) {
+                        console.log(4);
+                        await deleteCardById(item.id);
+                    }
+                });
+            }
             return res.status(200).json({
                 EC: data.EC,
                 EM: data.EM,
