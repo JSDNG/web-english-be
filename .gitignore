@@ -1,4 +1,5 @@
 node_modules
+.dockerignore
 .env
 Dockerfile
 yarn.lock
