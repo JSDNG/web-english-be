@@ -24,7 +24,7 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@192.168.1.100 << 'EOF'
           docker pull tdq11111/backend_nodejs
           docker run -d --name backend_nodejs -p 8080:8080 tdq11111/backend_nodejs
           EOF
