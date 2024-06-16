@@ -23,8 +23,9 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t tdq11111/backend_nodejs .
-        working-directory: ./src  # Thay đổi đường dẫn đến thư mục chứa Dockerfile
+        run: |
+          cd src
+          docker build -t tdq11111/backend_nodejs .
 
       - name: Push Docker image
         run: docker push tdq11111/backend_nodejs
