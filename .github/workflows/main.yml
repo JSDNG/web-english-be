@@ -36,5 +36,5 @@ jobs:
       - name: Deploy to server
         run: |
           docker pull tdq11111/backend_nodejs
-          docker run -d --name backend_nodejs -p 8080:8080 tdq11111/backend_nodejs
+          docker run -d -p 8080:8080 tdq11111/backend_nodejs
           EOF
