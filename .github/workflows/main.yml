@@ -22,14 +22,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image
-        run: |
-          cd src
-          docker build -t tdq11111/backend_nodejs .
-
-      - name: Push Docker image
-        run: docker push tdq11111/backend_nodejs
-
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
